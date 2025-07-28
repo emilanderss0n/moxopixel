@@ -1,0 +1,280 @@
+{
+    "work_items": [
+        {
+            "id": 1,
+            "useGithubReadme": false,
+            "title": "Black / Green / Sand -Core",
+            "description": "desc_1",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/1345-blackcore",
+                "game": "Escape from Tarkov",
+                "category": "Texturing",
+                "category_two": "Scripting",
+                "tag": "3D",
+                "release_year": "2023",
+                "coding_languages": [
+                    "TypeScript"
+                ],
+                "software_used": [
+                    "Photoshop",
+                    "Blender",
+                    "VSCode"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "blackcore-1.jpg",
+                    "youtube": null
+                }
+            ],
+            "thumb": "blackcore_merged.jpg",
+            "short_desc": "BlackCore adds black variants of gear and weapon attachments. SandCore adds FDE/Sand colored variants of weapon parts. GreenCore adds green weapon parts.",
+            "github": "https://github.com/emilanderss0n/BlackCore"
+        },
+        {
+            "id": 2,
+            "useGithubReadme": true,
+            "title": "Painter",
+            "description": "desc_2",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/1412-painter",
+                "game": "Escape from Tarkov",
+                "category": "Scripting",
+                "category_two": "Trader",
+                "tag": "3D",
+                "release_year": "2023",
+                "coding_languages": [
+                    "TypeScript"
+                ],
+                "software_used": [
+                    "Blender",
+                    "Photoshop",
+                    "Substance Painter",
+                    "VSCode",
+                    "Unity"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "painter-1.jpeg",
+                    "youtube": null
+                }
+            ],
+            "thumb": "painter.jpg",
+            "short_desc": "Painter is a trader in Escape From Tarkov who sells unique weapon mods and gear. The trader is required for my custom item mods.",
+            "github": "https://github.com/emilanderss0n/Painter"
+        },
+        {
+            "id": 3,
+            "useGithubReadme": false,
+            "title": "Mag Tape",
+            "description": "desc_3",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/1404-mag-tape",
+                "game": "Escape from Tarkov",
+                "category": "Texturing",
+                "category_two": "Scripting",
+                "tag": "3D",
+                "release_year": "2023",
+                "coding_languages": [
+                    "TypeScript"
+                ],
+                "software_used": [
+                    "Photoshop",
+                    "Blender",
+                    "VSCode"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "magtape-1.jpg",
+                    "youtube": null
+                }
+            ],
+            "thumb": "magtape.jpg",
+            "short_desc": "Adds magazines with tape on them for easier tagging and easier to spot on the ground. Mostly created for AR-15 and AK weapon platforms.",
+            "github": "https://github.com/emilanderss0n/MagTape"
+        },
+        {
+            "id": 4,
+            "useGithubReadme": false,
+            "title": "War Heads",
+            "description": "desc_4",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/1796-war-heads",
+                "game": "Escape from Tarkov",
+                "category": "Texturing",
+                "category_two": "Modeling",
+                "tag": "3D",
+                "release_year": "2024",
+                "coding_languages": [
+                    "TypeScript"
+                ],
+                "software_used": [
+                    "Substance Painter",
+                    "Photoshop",
+                    "Blender",
+                    "VSCode",
+                    "Unity"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "warheads-1.jpg",
+                    "youtube": null
+                }
+            ],
+            "thumb": "warheads.jpg",
+            "short_desc": "Adds new characters to Escape From Tarkov (SPT). Jon Snow, Jason Statham, etc. Enhance your escape, upgrade your head!",
+            "github": "https://github.com/emilanderss0n/WarHeads"
+        },
+        {
+            "id": 5,
+            "useGithubReadme": false,
+            "title": "Tactical Gear Component",
+            "description": "desc_5",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/1797-mre",
+                "game": "Escape from Tarkov",
+                "category": "Texturing",
+                "category_two": "Modeling",
+                "tag": "3D",
+                "release_year": "2024",
+                "coding_languages": [
+                    "TypeScript"
+                ],
+                "software_used": [
+                    "Substance Painter",
+                    "Photoshop",
+                    "Blender",
+                    "VSCode",
+                    "Unity"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "tgc-1.jpg",
+                    "youtube": null
+                }
+            ],
+            "thumb": "tgc.jpg",
+            "short_desc": "TGC adds 70+ unique items to Escape From Tarkov. With premium textures and materials. They stand out from the other mods that adds custom items.",
+            "github": "https://github.com/emilanderss0n/TGC"
+            
+        },
+        {
+            "id": 6,
+            "useGithubReadme": true,
+            "title": "Tarkynator",
+            "description": "desc_6",
+            "work_meta": {
+                "website": "https://moxopixel.com/tarkynator",
+                "game": "Escape from Tarkov",
+                "category": "Web Development",
+                "category_two": "Graphic Design",
+                "tag": "Web",
+                "release_year": "2024",
+                "coding_languages": [
+                    "JavaScript",
+                    "CSS",
+                    "HTML"
+                ],
+                "software_used": [
+                    "Photoshop",
+                    "VSCode"
+                ],
+                "engine": "EFT-API"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "tarkynator-3.png",
+                    "youtube": null
+                }
+            ],
+            "thumb": "tarkynator.jpg",
+            "short_desc": "Search through Escape From Tarkov databases with Tarkov API. This tool is designed to help you find items and their information in the game.",
+            "github": "https://github.com/emilanderss0n/tarkynator"
+        },
+        {
+            "id": 7,
+            "useGithubReadme": true,
+            "title": "Menu Overhaul",
+            "description": "desc_7",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/2412-wtt-menu-overhaul",
+                "game": "Escape from Tarkov",
+                "category": "UI Design",
+                "category_two": "Programming",
+                "tag": "UI",
+                "release_year": "2024",
+                "coding_languages": [
+                    "C#"
+                ],
+                "software_used": [
+                    "Photoshop",
+                    "Visual Studio",
+                    "Unity"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": "menu-overhaul-1.jpg",
+                    "youtube": null
+                },
+                {
+                    "id": 2,
+                    "image": null,
+                    "youtube": "https://youtu.be/AzcTRCgWmD4?si=cXFQ8861Zh_rbKQL"
+                }
+            ],
+            "thumb": "menuoverhaul.jpg",
+            "short_desc": "A complete overhaul of the Escape From Tarkov menu system. This mod changes the look and feel of the game's menu system.",
+            "github": "https://github.com/emilanderss0n/SPT-Menu-Overhaul"
+        },
+        {
+            "id": 8,
+            "useGithubReadme": true,
+            "title": "Advanced Modding Lights",
+            "description": "desc_8",
+            "work_meta": {
+                "website": "https://hub.sp-tarkov.com/files/file/2906-advanced-modding-lights/",
+                "game": "Escape from Tarkov",
+                "category": "UI Design",
+                "category_two": "Programming",
+                "tag": "UI",
+                "release_year": "2025",
+                "coding_languages": [
+                    "C#"
+                ],
+                "software_used": [
+                    "Visual Studio",
+                    "Unity"
+                ],
+                "engine": "Unity"
+            },
+            "slider_images": [
+                {
+                    "id": 1,
+                    "image": null,
+                    "youtube": "https://youtu.be/LYPTjbPlVvA?si=c87AiXR_B_RHYkst"
+                }
+            ],
+            "thumb": "aml.jpg",
+            "short_desc": "A BepInEx plugin for SPT (Single Player Tarkov) that enhances lighting in weapon modding and build screens for better visibility and aesthetics.",
+            "github": "https://github.com/emilanderss0n/AdvancedModdingLights"
+        }
+    ]
+}

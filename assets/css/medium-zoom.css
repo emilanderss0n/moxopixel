@@ -1,0 +1,32 @@
+.medium-zoom-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 300ms;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 999;
+}
+
+.medium-zoom--opened .medium-zoom-overlay {
+  opacity: 1;
+  cursor: zoom-out;
+}
+
+.medium-zoom-image {
+  cursor: zoom-in;
+  transition: transform 300ms linear !important;
+}
+
+.medium-zoom-image--hidden {
+  visibility: hidden;
+}
+
+.medium-zoom-image--opened {
+  position: relative;
+  cursor: zoom-out;
+  z-index: 1000;
+  object-fit: contain;
+}
