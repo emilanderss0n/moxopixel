@@ -254,18 +254,16 @@
         user-select: none;
         font-family: inherit;
         font-weight: 600;
-    }
 
-    .btn:hover,
-    button:hover {
-        background-color: var(--main-color-bg);
-    }
+        &:hover {
+            background-color: var(--main-color-bg);
+        }
 
-    .btn:disabled,
-    button:disabled {
-        opacity: 0.5;
-        cursor: default;
-        pointer-events: none;
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+            pointer-events: none;
+        }
     }
 
     .hidden {
@@ -449,10 +447,12 @@
     }
 
     #navbarSupportedContent {
+        position: relative;
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 3rem;
+        z-index: 999999;
     }
 
     .hamburger {
@@ -530,7 +530,7 @@
         height: 200px;
 
         @media screen and (max-width: 40rem) {
-            height: 150px;
+            height: auto;
         }
     }
 
@@ -558,7 +558,7 @@
 
         @container card (max-width: 25rem) {
             flex-direction: column;
-            max-height: none;
+            max-height: fit-content;
         }
     }
 
@@ -610,10 +610,6 @@
         margin-top: 1rem;
         font-size: 1.2rem;
         line-height: 1.5;
-    }
-
-    .card-bfx .card-text:hover {
-        mask: linear-gradient(180deg, oklch(0 0 0) 30%, oklch(0 0 0 / 1) 100%);
     }
 
     .card-body > .card-type {
@@ -1048,14 +1044,16 @@
         mask: linear-gradient(90deg, oklch(0 0 0) 20%, oklch(0 0 0 / 0) 100%);
 
         @container main-layout (max-width: 62.5rem) {
+            --width: 100%;
             position: fixed;
             top: 0;
             left: 0;
             height: 100%;
-            z-index: 9999;
+            z-index: 100;
             transform: translateX(-100%);
-            background-color: var(--darkest-bg);
-            mask: linear-gradient(90deg, oklch(0 0 0) 20%, oklch(0 0 0 / 0.83) 100%);
+            background-color: oklch(0.08 0.01 0 / 0.76);
+            backdrop-filter: blur(20px);
+            mask: none;
             transition: transform 0.3s ease-in-out;
 
             &.active {
@@ -1070,6 +1068,12 @@
         width: 100%;
         background-color: var(--color-bg2);
         padding: 1rem var(--padding);
+    }
+
+    @media screen and (max-width: 1000px) {
+        #mainContainer .main-title {
+            display: none;
+        }
     }
 
     #mainContainer .main-sidebar .main-title span {
@@ -1092,7 +1096,7 @@
     #mainContainer .links {
         flex: auto;
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         flex-direction: column;
         position: relative;
         z-index: 1;
@@ -1522,6 +1526,26 @@
             height: 350px;
             margin: var(--padding-sm);
         }
+        
+        /* Disable hover effects on mobile/tablet */
+        .card-bfx .card-title.primary {
+            transform: translateY(50%) !important;
+            opacity: 1 !important;
+        }
+        
+        .card-bfx .card-title.secondary {
+            transform: translateY(100%) !important;
+            opacity: 0 !important;
+        }
+        
+        .card-bfx .tag-content {
+            transform: translateY(10px) !important;
+            opacity: 0 !important;
+        }
+        
+        .card-bfx .image > img {
+            opacity: 0.7 !important;
+        }
     }
 
     .work-desc {
@@ -1666,6 +1690,20 @@
             background-size: 200%;
         }
 
+        .nav-menu {
+            top: 0;
+            height: 50vh;
+            align-content: center;
+        }
+
+        .nav-menu-inner {
+            align-items: center;
+        }
+
+        .nav-menu-inner .nav-link {
+            padding-right: 0;
+        }
+
         .hamburger {
             display: flex;
         }
@@ -1722,11 +1760,22 @@
             padding-top: 2rem;
             background-color: transparent;
         }
+
+        #mainContainer .links .card-text {
+            font-size: 1rem;
+            margin-top: 0;
+        }
     }
 
     @media (max-width: 680px) {
+
+        #mainContainer {
+            padding-top: 4rem;
+        }
+
         .navbar {
-            padding: 1rem var(--padding);
+            --header-height: auto;
+            padding: 0.75rem var(--padding);
         }
 
         .navbar-brand > img {
@@ -1750,10 +1799,6 @@
             margin-bottom: 0.3rem;
             font-size: 1.3rem;
             font-family: "Tektur", sans-serif;
-        }
-
-        #mainContainer .links .card-text {
-            font-weight: 400;
         }
 
         .work-header {

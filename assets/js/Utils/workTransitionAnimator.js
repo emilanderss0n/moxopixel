@@ -18,6 +18,16 @@ export class WorkTransitionAnimator {
         // Clean up any existing overlays on initialization
         const existingOverlays = document.querySelectorAll('.work-transition-overlay');
         existingOverlays.forEach(overlay => overlay.remove());
+        
+        // Add resize listener to handle screen size changes
+        this.handleResize = this.debounce(() => {
+            const cards = document.querySelectorAll('.card-bfx');
+            if (cards.length > 0) {
+                this.refreshHoverAnimations(cards);
+            }
+        }, 250);
+        
+        window.addEventListener('resize', this.handleResize);
     }
 
     /**
@@ -201,19 +211,32 @@ export class WorkTransitionAnimator {
      */
     addHoverAnimations(cards) {
         const links = cards;
+        
+        // Check if screen width is mobile/small tablet (768px or less)
+        const isMobileOrSmallTablet = window.innerWidth <= 768;
 
         links.forEach(link => {
+            const headingStart = link.querySelector('.card-title.primary')
+            const headingEnd = link.querySelector('.card-title.secondary')
+            const cardTag = link.querySelector('.tag-content')
+            const cardImage = link.querySelector('.image > img')
+            
+            if (isMobileOrSmallTablet) {
+                // On mobile/small tablets, ensure only primary title is visible and no hover effects
+                gsap.set(headingStart, { yPercent: 0, opacity: 1 });
+                gsap.set(headingEnd, { yPercent: 100, opacity: 0 });
+                gsap.set(cardTag, { y: 10, opacity: 0 });
+                gsap.set(cardImage, { opacity: 0.7 });
+                return; // Skip hover animation setup
+            }
+            
+            // Desktop hover animations
             let linkTL = gsap.timeline({
                 defaults: {
                     duration: .4,
                     ease: "power4.inOut"
                 }
             })
-            
-            const headingStart = link.querySelector('.card-title.primary')
-            const headingEnd = link.querySelector('.card-title.secondary')
-            const cardTag = link.querySelector('.tag-content')
-            const cardImage = link.querySelector('.image > img')
             
             linkTL
                 .to(headingStart, {
@@ -240,6 +263,39 @@ export class WorkTransitionAnimator {
                 linkTL.reverse()
             })
         })
+    }
+
+    /**
+     * Refresh hover animations when screen size changes
+     */
+    refreshHoverAnimations(cards) {
+        // Remove existing event listeners and reset states
+        cards.forEach(link => {
+            // Clone the element to remove all event listeners
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+        });
+        
+        // Get the updated cards after cloning
+        const refreshedCards = document.querySelectorAll('.card-bfx');
+        
+        // Re-apply hover animations with current screen size
+        this.addHoverAnimations(refreshedCards);
+    }
+
+    /**
+     * Simple debounce utility
+     */
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
 
     /**
@@ -309,6 +365,14 @@ export class WorkTransitionAnimator {
             clonedCard: null,
             overlay: null
         };
+    }
+
+    /**
+     * Destroy the animator instance and clean up event listeners
+     */
+    destroy() {
+        this.cancel();
+        window.removeEventListener('resize', this.handleResize);
     }
 }
 
