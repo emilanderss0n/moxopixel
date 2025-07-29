@@ -1740,6 +1740,10 @@
             height: 180px;
         }
 
+        .work-header {
+            background-color: var(--content-bg);
+        }
+
         .work-item .work-content {
             flex-direction: column;
         }
@@ -1808,7 +1812,8 @@
             padding: var(--padding);
             margin-inline-start: 0;
             margin-inline-end: 0;
-            background-color: var(--content-bg);
+            flex-direction: column;
+            gap: 1rem;
         }
 
         #imageContainer .body {

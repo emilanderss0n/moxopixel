@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageLoader = new ImageLoader();
     const homeTrigger = document.querySelector('.home-trigger');
     const aboutContainer = document.getElementById('aboutContent');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navCheckbox = document.getElementById('nav-checkbox');
 
     const lenis = new Lenis({
         autoRaf: true,
@@ -431,6 +433,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadingContainer.style.display = 'none';
     mainContainer.style.display = 'block';
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navCheckbox && navCheckbox.checked) {
+                navCheckbox.checked = false;
+            }
+        });
+    });
+
 });
 
 // Move these functions outside the DOMContentLoaded handler
