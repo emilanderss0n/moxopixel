@@ -1,6 +1,1 @@
-# Ignore all cache files
-cache/
 *.tmp
-
-# Keep the directory structure
-!.gitkeep
