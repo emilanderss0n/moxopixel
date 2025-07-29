@@ -50,22 +50,23 @@ Options -MultiViews +FollowSymLinks
 
 # Enable rewrite engine
 RewriteEngine On
-RewriteBase /moxo/
+
+# Set base depending on environment
+RewriteCond %{HTTP_HOST} ^(localhost|127\.0\.0\.1)$ [NC]
+RewriteRule ^moxo/(.*)$ /moxo/$1 [L]
 
 # If the request is for an actual file or directory, serve it directly
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Handle JS files through serve-module.php
+# Handle JS files through serve-module.php (works for both environments)
 RewriteCond %{REQUEST_URI} \.js$
 RewriteRule ^(.+)\.js$ serve-module.php?file=$1.js [L,QSA]
 
-# Handle clean URLs for work and gallery - make sure gallery has priority
+# Clean URLs for work, gallery, about (works for both)
 RewriteRule ^gallery/?$ index.php [L,QSA]
 RewriteRule ^work/([^/]+)/?$ index.php [L,QSA]
-
-# Update rewrite rules to include about page
 RewriteRule ^about/?$ index.php [L,QSA]
 
 # All other non-file/directory requests go to index.php
