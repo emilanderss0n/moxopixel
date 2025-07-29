@@ -4,12 +4,9 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
-    <!-- Add early hints for critical resources -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preload" as="style" href="assets/css/main.css">
     
-    <!-- Standard meta tags -->
     <meta charset="UTF-8" />
     <base href="<?php echo $base; ?>">
     <title>MOXOPIXEL // Game Art</title>
@@ -20,24 +17,18 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <meta property="og:title" content="MOXOPIXEL // Game Art" />
     <meta name="view-transition" content="same-origin" />
 
-    <!-- Critical CSS first -->
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-    
-    <!-- Non-critical CSS with async loading -->
     <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" type="text/css" href="assets/css/medium-zoom.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
     
-    <!-- Favicon -->
     <link rel="icon" href="assets/img/favicon.png">
 
-    <!-- Keep Google Fonts but optimize loading -->
     <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" 
           rel="stylesheet"
           media="print"
           onload="this.media='all'">
 
-    <!-- Add fallback for font loading -->
     <style>
         .fonts-loading {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -45,7 +36,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     </style>
 </head>
 <body class="fonts-loading">
-    <!-- Add loading state -->
     <script>
         // Remove loading class once fonts are loaded
         if (document.fonts) {
@@ -54,8 +44,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
             });
         }
     </script>
-
-    <div class="noise-overlay"></div>
 
     <div class="content-wrap">
 
@@ -140,7 +128,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
                     <div id="aboutContent">
                         <div class="about-title hover-effect hover-effect-cursor-square">Hello! I'm MoxoPixel</div>
                         <div class="about-content animate-in">
-                            <p>My real name is Emil, and I have been a digital artist for over 20 years, specializing in high-detail custom content. Based in Sweden, I began exploring game modding a few years ago and quickly developed a passion for texturing 3D models. This website serves as a portfolio of my work and projects in the modding community, highlighting my dedication to enhancing the longevity and experience of the games I modify.</p>
+                            <p class="about-intro">My real name is Emil, and I have been a digital artist for over 20 years, specializing in high-detail custom content. Based in Sweden, I began exploring game modding a few years ago and quickly developed a passion for texturing 3D models. This website serves as a portfolio of my work and projects in the modding community, highlighting my dedication to enhancing the longevity and experience of the games I modify.</p>
                             <div class="github-component grid" grid-max-col-count="3"></div>
                             <p class="foot-note">This site was built by me with JS, PHP and CSS. Web development is also a passion of mine. Visit <a href="https://emils.graphics" target="_blank">https://emils.graphics</a> to learn more.</p>
                             <a class="kofi" href="https://ko-fi.com/moxopixel" target="_blank"></a>

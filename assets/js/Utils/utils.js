@@ -269,3 +269,47 @@ export function addPreloadHoverListener(element, enterCallback) {
     if (touchTimer) clearTimeout(touchTimer);
   };
 }
+
+/**
+ * Finds a work card element by its ID or slug
+ * @param {string} idOrSlug - The work item's ID or slug
+ * @returns {HTMLElement|null} The matching card element or null
+ */
+export function findCardByIdOrSlug(idOrSlug) {
+    // Try to find by data-class (desc_ID)
+    let card = document.querySelector(`[data-class="desc_${idOrSlug}"]`);
+    if (card) return card;
+
+    // Try to find by slug in data-title
+    const allCards = document.querySelectorAll('.card-bfx');
+    for (const el of allCards) {
+        const title = el.dataset.title || '';
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        if (slug === idOrSlug) {
+            return el;
+        }
+    }
+    return null;
+}
+
+/**
+ * Creates a virtual card element from a work item object
+ * @param {Object} item - The work item data
+ * @returns {HTMLElement} The virtual card element
+ */
+export function createVirtualCard(item) {
+    const card = document.createElement('a');
+    card.dataset.class = `desc_${item.id}`;
+    card.dataset.slider_img = item.slider_images[0].image;
+    card.dataset.slider_images = JSON.stringify(item.slider_images);
+    card.dataset.title = item.title;
+    card.dataset.web = item.work_meta.website;
+    card.dataset.category_one = item.work_meta.category;
+    card.dataset.category_two = item.work_meta.category_two;
+    card.dataset.github = item.github;
+    card.dataset.useGithubReadme = item.useGithubReadme === true ? 'true' : 'false';
+    card.dataset.coding_languages = JSON.stringify(item.work_meta.coding_languages);
+    card.dataset.software_used = JSON.stringify(item.work_meta.software_used);
+    card.classList.add('card-bfx');
+    return card;
+}
