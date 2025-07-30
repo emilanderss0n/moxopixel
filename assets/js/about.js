@@ -1,7 +1,6 @@
 import { fetchGitHubData, preloadGitHubData, isGitHubDataPreloaded } from './github.js';
-import { animateText } from './External/text-animator.js';
+import { animateText, animateTitleElement } from './External/text-animator.js';
 import { scheduleIdleTask, addPreloadHoverListener } from './Utils/utils.js';
-import { animateTitleElement } from './Utils/title-animator.js';
 
 let isAboutPageInitialized = false;
 let titleAnimationStarted = false;

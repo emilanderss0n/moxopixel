@@ -5,10 +5,9 @@ import { ImageLoader } from './Utils/imageLoader.js';
 import { Router } from './router.js';
 import { handleWorkClick } from './workModule.js'; // Updated to use unified module
 import { fetchGitHubData, preloadGitHubData } from './github.js';
-import { animateText } from './External/text-animator.js';
+import { animateText, animateTitleElement } from './External/text-animator.js';
 import { setupAboutPreloading } from './about.js';
 import { scheduleIdleTask } from './Utils/utils.js';
-import { animateTitleElement } from './Utils/title-animator.js';
 
 let router;
 let workItemsLoaded = false; // Add a flag to track if work items have been loaded
@@ -32,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageLoader = new ImageLoader();
     const homeTrigger = document.querySelector('.home-trigger');
     const aboutContainer = document.getElementById('aboutContent');
+    const navItem = document.querySelector('.nav-item');
     const navLinks = document.querySelectorAll('.nav-link');
     const navCheckbox = document.getElementById('nav-checkbox');
 
@@ -324,14 +324,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? '.nav-link.image-gallery-trigger'
                 : `.nav-link.${active}-trigger`
         );
-
-        // Update active states
+        // Remove active from all nav-items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        // Remove active from all nav-links
         navLinks.forEach(link => {
             link.classList.remove('active');
         });
-
         if (activeLink) {
             activeLink.classList.add('active');
+            const parentNavItem = activeLink.closest('.nav-item');
+            if (parentNavItem) {
+                parentNavItem.classList.add('active');
+            }
         }
     }
     
@@ -450,6 +456,15 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', () => {
             if (navCheckbox && navCheckbox.checked) {
                 navCheckbox.checked = false;
+            }
+            // Remove active from all nav-items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Add active to the parent nav-item of the clicked link
+            const parentNavItem = link.closest('.nav-item');
+            if (parentNavItem) {
+                parentNavItem.classList.add('active');
             }
         });
     });

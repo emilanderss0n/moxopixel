@@ -152,8 +152,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
 
     <script defer src="serve-module.php?file=External/medium-zoom.js"></script>
     <script defer src="serve-module.php?file=External/gsap.min.js"></script>
-    <script defer src="serve-module.php?file=External/Flip.min.js"></script>
-    <script defer src="serve-module.php?file=External/InertiaPlugin.min.js"></script>
     <script defer src="serve-module.php?file=/External/split-type.min.js"></script>
     <script type="module" src="serve-module.php?file=main.js"></script>
 

@@ -1,4 +1,4 @@
-import { animateTitleElement } from './Utils/title-animator.js';
+import { animateText, animateTitleElement } from './External/text-animator.js';
 
 let currentPage = 1;
 let totalPages = 1;

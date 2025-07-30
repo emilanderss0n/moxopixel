@@ -79,6 +79,7 @@
 }
 
 @layer utility {
+
     ::selection {
         color: var(--text-color);
         background-color: var(--main-color-bg);
@@ -114,21 +115,6 @@
 }
 
 @layer animations {
-    @keyframes shrink-top {
-        0% {
-            --item-scale: 0.5;
-            --item-angle: -60deg;
-            transform-origin: top;
-        }
-    }
-
-    @keyframes shrink-bottom {
-        0% {
-            --item-scale: 0.5;
-            --item-angle: 60deg;
-            transform-origin: bottom;
-        }
-    }
 
     @keyframes loader {
         0% {
@@ -647,7 +633,6 @@
         height: 100%;
         opacity: 0.8;
         transition: all 0.3s linear;
-        backdrop-filter: blur(10px);
         position: relative;
         z-index: 2;
     }
@@ -724,8 +709,6 @@
         padding: 1rem 0;
         position: sticky;
         top: 100px;
-        container-type: inline-size;
-        container-name: nav-menu;
     }
 
     .nav-menu-inner {
@@ -740,57 +723,55 @@
         width: 100%;
         border-bottom: 1px solid var(--border-color);
         position: relative;
-    }
 
-    .nav-link {
-        font-family: "Tektur", sans-serif;
-        font-size: 2rem;
-        display: flex;
-        font-weight: 400;
-        position: relative;
-        width: 100%;
-        padding: 2rem;
-        transition: all 0.4s ease;
-    }
+        &.active {
+            background-color: var(--content-bg-light);
+        }
 
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 1px;
-        bottom: -1px;
-        left: 0;
-        background-color: var(--main-color);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.8s cubic-bezier(0.055, 0.72, 0.165, 1);
-    }
+        & .nav-link {
+            font-family: "Tektur", sans-serif;
+            font-size: 1.8rem;
+            display: flex;
+            font-weight: 400;
+            position: relative;
+            width: 100%;
+            padding: 1.8rem var(--padding);
+            transition: all 0.4s ease;
 
-    .nav-link:hover::after {
-        transform: scaleX(1);
-    }
+            &::after {
+                content: '';
+                position: absolute;
+                width: 0.5rem;
+                height: 100%;
+                bottom: 0;
+                left: 0;
+                background-color: var(--main-color);
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.8s cubic-bezier(0.055, 0.72, 0.165, 1);
 
-    .nav-link.active:hover::after {
-        background-color: var(--main-color);
-        transform: scaleX(0);
-    }
+                &:hover {
+                    transform: scaleX(1);
+                }
+            }
 
-    .nav-link.active {
-        color: var(--white);
-        pointer-events: none;
-    }
+            &:hover::after {
+                transform: scaleX(1);
 
-    .nav-link:hover {
-        color: var(--white);
-    }
+                & .nav-link.active::after {
+                    transform: scaleX(0);
+                }
+            }
 
-    .nav-link.active:hover {
-        color: var(--main-color);
-    }
+            &.active {
+                color: var(--white);
+                pointer-events: none;
+            }
 
-    .nav-link:focus-visible {
-        padding: inherit;
-        box-shadow: none;
+            &:hover {
+                color: var(--white);
+            }
+        }
     }
 
     .char {
@@ -876,7 +857,7 @@
         position: relative;
         width: 100%;
         z-index: 100;
-        background-color: var(--darkest-bg);
+        background-color: var(--color-bg2);
         container-type: inline-size;
         container-name: pagination;
 
@@ -1680,7 +1661,7 @@
         }
 
         .nav-link::after {
-            transform-origin: center;
+            display: none;
         }
 
         .hamburger {

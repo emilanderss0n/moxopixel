@@ -79,3 +79,18 @@ export function animateText(element) {
 
   return animator;
 }
+
+export async function animateTitleElement(elementOrSelector) {
+    let el = elementOrSelector;
+    if (typeof elementOrSelector === 'string') {
+        el = document.querySelector(elementOrSelector);
+    }
+    if (!el || !window.gsap) return false;
+    try {
+        animateText(el);
+        return true;
+    } catch (error) {
+        console.error('Error animating title:', error);
+        return false;
+    }
+}
