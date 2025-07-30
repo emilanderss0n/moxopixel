@@ -850,17 +850,23 @@
     }
 
     .navbar {
-        padding: 0 var(--padding);
+        padding: var(--padding);
+        align-items: flex-start;
         user-select: none;
         position: fixed;
         top: 0;
         left: 0;
-        height: var(--header-height);
+        height: fit-content;
         width: 100%;
         z-index: 1000;
-        mask: linear-gradient(oklch(0 0 0), oklch(0 0 0 / 0.8) 40%, transparent);
-        background-color: oklch(0.87 0.1 209.18 / 0.09);
+        mask: linear-gradient(oklch(0 0 0) 0%, oklch(0 0 0 / 0.8) 10%, transparent);
         backdrop-filter: blur(20px);
+        background-color: transparent;
+        transition: all 0.5s linear;
+
+        &:hover {
+            background-color: oklch(0.61 0.07 190.16 / 0.16);
+        }
 
         & .navbar-brand {
             color: var(--text-color);
@@ -1130,6 +1136,7 @@
         flex-direction: column;
         position: relative;
         z-index: 1;
+        padding-top: 2rem;
     }
 
     .main-app {
@@ -1675,6 +1682,10 @@
             height: 180px;
         }
 
+        .work-details {
+            padding-top: 0;
+        }
+
         .work-header {
             background-color: var(--content-bg);
         }
@@ -1713,8 +1724,7 @@
         }
 
         .navbar {
-            --header-height: auto;
-            padding: 0.75rem var(--padding);
+            align-items: center;
         }
 
         .navbar-brand > img {
