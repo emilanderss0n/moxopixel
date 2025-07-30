@@ -1,6 +1,7 @@
 import { fetchGitHubData, preloadGitHubData, isGitHubDataPreloaded } from './github.js';
 import { animateText } from './External/text-animator.js';
 import { scheduleIdleTask, addPreloadHoverListener } from './Utils/utils.js';
+import { animateTitleElement } from './Utils/title-animator.js';
 
 let isAboutPageInitialized = false;
 let titleAnimationStarted = false;
@@ -62,19 +63,11 @@ export function resetAboutPageState() {
 export async function animateAboutTitle() {
     const aboutContainer = document.getElementById('aboutContainer');
     if (!aboutContainer) return false;
-    
     const aboutTitle = aboutContainer.querySelector('.about-title');
-    if (aboutTitle && window.gsap) {
-        try {
-            // Import animator and animate directly
-            const module = await import('./External/text-animator.js');
-            module.animateText(aboutTitle);
-            titleAnimationStarted = true;
-            return true;
-        } catch (error) {
-            console.error('Error animating about title:', error);
-            return false;
-        }
+    const success = await animateTitleElement(aboutTitle);
+    if (success) {
+        titleAnimationStarted = true;
+        return true;
     }
     return false;
 }

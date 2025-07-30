@@ -1,22 +1,11 @@
 import { ImageLoader } from './Utils/imageLoader.js';
 import { fetchGitHubReadme } from './github.js';
 import { ensureRouterIsInitialized } from './main.js';
-import { animateSimpleText } from './External/simple-animator.js';
 import { fetchAndDisplayWorkItems } from './initWorks.js';
+import { animateText } from './External/text-animator.js';
 
 // Try to import the main text-animator, but fall back if it fails
 let animateText;
-try {
-    import('./External/text-animator.js').then(module => {
-        animateText = module.animateText;
-    }).catch(error => {
-        console.warn('Using simple text animator due to error:', error);
-        animateText = animateSimpleText;
-    });
-} catch (error) {
-    console.warn('Using simple text animator due to error:', error);
-    animateText = animateSimpleText;
-}
 
 // Add this helper function to get router safely
 function getRouter() {
@@ -24,9 +13,6 @@ function getRouter() {
 }
 
 // Store references to current view elements for back navigation
-let currentCardRef = null;
-let currentImageRef = null;
-let currentTitleRef = null;
 let currentAnimationTimeout = null;
 
 export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
@@ -201,8 +187,6 @@ export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
                 const workTitleElement = tempContainer.querySelector('.work-title h3');
                 if (workTitleElement && typeof animateText === 'function') {
                     animateText(workTitleElement);
-                } else if (workTitleElement) {
-                    animateSimpleText(workTitleElement);
                 }
 
                 // Load the featured image or YouTube embed
@@ -292,20 +276,12 @@ export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
 
 // Improve the initialization to avoid duplicates
 export function initWorkClickHandler(cards, linksDiv, titleElement, workDetails) {
-    // First, remove any existing click listeners to prevent duplicates
-    // Clone approach can cause duplication if called multiple times, so using a different approach
     for (const card of cards) {
-        // First remove any existing click listeners
-        const oldCard = card;
-        const newCard = oldCard.cloneNode(true);
-
-        // Add the click handler to the new element
-        newCard.addEventListener('click', () => handleWorkClick(newCard, linksDiv, titleElement, workDetails));
-
-        // Replace the old element with the new one
-        if (oldCard.parentNode) {
-            oldCard.parentNode.replaceChild(newCard, oldCard);
-        }
+        // Remove any previous click handler
+        card.removeEventListener('click', card._workClickHandler);
+        // Create and store the handler so it can be removed later
+        card._workClickHandler = () => handleWorkClick(card, linksDiv, titleElement, workDetails);
+        card.addEventListener('click', card._workClickHandler);
     }
 }
 

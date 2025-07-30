@@ -8,6 +8,7 @@ import { fetchGitHubData, preloadGitHubData } from './github.js';
 import { animateText } from './External/text-animator.js';
 import { setupAboutPreloading } from './about.js';
 import { scheduleIdleTask } from './Utils/utils.js';
+import { animateTitleElement } from './Utils/title-animator.js';
 
 let router;
 let workItemsLoaded = false; // Add a flag to track if work items have been loaded
@@ -91,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             linksDiv.style.display = 'flex';
         }
         titleElement.innerHTML = `
-            <span>Modding Work</span>
+            <span class="animate-in animate-d1">Modding Work</span>
         `;
         titleElement.classList.remove('back-link');
 
@@ -303,6 +304,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300); // Slightly longer delay to ensure everything is loaded
     });
 
+    // Use the already declared navLinks variable
+    navLinks.forEach(link => {
+        // Only animate if inside .nav-menu and not active
+        if (link.closest('.nav-menu')) {
+            link.addEventListener('mouseenter', () => {
+                if (!link.classList.contains('active')) {
+                    animateTitleElement(link);
+                }
+            });
+        }
+    });
+
     function updateNavigation(active) {
         const navLinks = document.querySelectorAll('.nav-link');
         // Fix gallery link selector by adding both possibilities
@@ -329,11 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function handlePageChange(event) {
         const page = event.detail.page;
-        // Only update URL after ensuring we're not already loading
+        // Only update gallery view, do not update URL
         if (!isLoadingGallery) {
             loadGalleryPage(page);
-            const newUrl = `${baseUrl}/gallery?page=${page}`;
-            history.pushState({ page: 'gallery', galleryPage: page }, 'MOXOPIXEL // Gallery', newUrl);
+            // Removed history.pushState to prevent URL change on pagination
         }
     }
       async function loadGalleryPage(page = 1) {
@@ -462,7 +474,7 @@ const updateUIForRoute = function (route, params = {}) {
             if (linksDiv) {
                 linksDiv.style.display = 'grid';
             }
-            titleElement.innerHTML = `<span>Modding Work</span>`;
+            titleElement.innerHTML = `<span class="animate-in animate-d1">Modding Work</span>`;
             titleElement.classList.remove('back-link');
             break;
 

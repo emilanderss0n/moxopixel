@@ -6,24 +6,11 @@
  */
 
 import { ImageLoader } from './Utils/imageLoader.js';
+import { animateText } from './External/text-animator.js';
 import { fetchGitHubReadme } from './github.js';
 import { ensureRouterIsInitialized } from './main.js';
-import { animateSimpleText } from './External/simple-animator.js';
 import { workTransitionAnimator } from './Utils/workTransitionAnimator.js';
 
-// Animation handling
-let animateText = animateSimpleText; // Default fallback
-
-// Try to import the advanced text animator
-try {
-    import('./External/text-animator.js').then(module => {
-        animateText = module.animateText;
-    }).catch(error => {
-        console.warn('Using simple text animator due to error:', error);
-    });
-} catch (error) {
-    console.warn('Using simple text animator due to error:', error);
-}
 
 // State management
 const state = {

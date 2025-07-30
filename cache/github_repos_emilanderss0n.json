@@ -949,7 +949,7 @@
                 "site_admin": false
             },
             "html_url": "https:\/\/github.com\/emilanderss0n\/moxopixel",
-            "description": "Website for my modding work",
+            "description": "This website serves as a portfolio of my work and projects in the modding community, highlighting my dedication to enhancing the longevity and experience of the games I modify.",
             "fork": false,
             "url": "https:\/\/api.github.com\/repos\/emilanderss0n\/moxopixel",
             "forks_url": "https:\/\/api.github.com\/repos\/emilanderss0n\/moxopixel\/forks",
@@ -989,14 +989,14 @@
             "releases_url": "https:\/\/api.github.com\/repos\/emilanderss0n\/moxopixel\/releases{\/id}",
             "deployments_url": "https:\/\/api.github.com\/repos\/emilanderss0n\/moxopixel\/deployments",
             "created_at": "2025-07-28T15:39:13Z",
-            "updated_at": "2025-07-28T15:41:51Z",
-            "pushed_at": "2025-07-28T15:41:46Z",
+            "updated_at": "2025-07-29T04:21:23Z",
+            "pushed_at": "2025-07-29T04:21:20Z",
             "git_url": "git:\/\/github.com\/emilanderss0n\/moxopixel.git",
             "ssh_url": "git@github.com:emilanderss0n\/moxopixel.git",
             "clone_url": "https:\/\/github.com\/emilanderss0n\/moxopixel.git",
             "svn_url": "https:\/\/github.com\/emilanderss0n\/moxopixel",
-            "homepage": null,
-            "size": 87158,
+            "homepage": "https:\/\/moxopixel.com\/",
+            "size": 98746,
             "stargazers_count": 0,
             "watchers_count": 0,
             "language": "JavaScript",
@@ -2039,6 +2039,6 @@
             "default_branch": "main"
         }
     ],
-    "cached_at": 1753743457,
-    "expires_at": 1753829857
+    "cached_at": 1753836919,
+    "expires_at": 1753923319
 }

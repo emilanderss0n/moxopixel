@@ -92,25 +92,25 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
                 <div class="body" id="mainContent">
                     <div class="main-sidebar">
                         <div class="main-title">
-                            <span class="default-title">Modding Work</span>
+                            <span class="default-title animate-in animate-d1">Modding Work</span>
                         </div>
                         <nav class="nav-menu" role="navigation" aria-label="Main menu">
                             <div class="nav-menu-inner">
-                            <div class="nav-item">
-                                <div class="text-reveal">
-                                <a href="#" class="nav-link home-trigger shift-effect" tabindex="-1"><span>Home</span></a>
+                                <div class="nav-item animate-in animate-d2">
+                                    <a href="#" class="nav-link home-trigger hover-effect hover-effect-cursor-square" tabindex="-1">
+                                        <span>Home</span>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="nav-item">
-                                <div class="text-reveal">
-                                <a href="#" class="nav-link about-trigger shift-effect" tabindex="-1"><span>MoxoPixel</span></a>
+                                <div class="nav-item animate-in animate-d3">
+                                    <a href="#" class="nav-link about-trigger hover-effect hover-effect-cursor-square" tabindex="-1">
+                                        <span>About Me</span>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="nav-item">
-                                <div class="text-reveal">
-                                <a href="#" class="nav-link image-gallery-trigger shift-effect" tabindex="-1"><span>Gallery</span></a>
+                                <div class="nav-item animate-in animate-d4">
+                                    <a href="#" class="nav-link image-gallery-trigger hover-effect hover-effect-cursor-square" tabindex="-1">
+                                        <span>Gallery</span>
+                                    </a>
                                 </div>
-                            </div>
                             </div>
                         </nav>
                     </div>
@@ -136,7 +136,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
                     </div>
 
                     <div id="imageContainer">
-                        <div class="body animate-in" id="imageContent">
+                        <div class="body animate-in animate-d1" id="imageContent">
 
                         </div>
                     </div>
