@@ -78,7 +78,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
                     </svg>
                 </label>
             </div>
-            <div class="navbar-gradient-blur"></div>
         </nav>
 
         <div class="container-fluid main-app">
