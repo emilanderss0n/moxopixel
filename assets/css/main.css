@@ -191,6 +191,10 @@
         transition: 0.2s all linear;
     }
 
+    a:hover {
+        color: var(--main-color-hover);
+    }
+
     h1,
     h2,
     h3,
@@ -843,11 +847,6 @@
             & h2 {
                 margin: 0;
                 font-size: 100%;
-
-                & a {
-                    color: var(--brighter-color);
-                    font-weight: 500;
-                }
             }
 
             & p {
@@ -1302,15 +1301,6 @@
         & ol {
             margin-bottom: 16px;
             padding-left: 2em;
-        }
-
-        & a {
-            color: #0969da;
-            text-decoration: none;
-
-            &:hover {
-                text-decoration: underline;
-            }
         }
 
         & img {
