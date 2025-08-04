@@ -148,10 +148,10 @@ export async function fetchGitHubData(container) {
             .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
             .slice(0, 20)
             .map(repo => `
-                <div class="repo-item">
-                    <h2><a href="${repo.html_url}" target="_blank" class="github-link">${repo.name}</a></h2>
+                <a class="repo-item" href="${repo.html_url}" target="_blank">
+                    <h2>${repo.name}</h2>
                     <p>${repo.description || ''}</p>
-                </div>
+                </a>
             `).join('');
 
         container.innerHTML = userBadge + reposList;

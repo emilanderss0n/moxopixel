@@ -25,7 +25,7 @@
     --br-sm: 0.3rem;
     --br-med: 0.5rem;
     --br-lg: 0.7rem;
-    --border-color: oklch(1 0 0 / 0.04);
+    --border-color: oklch(0.76 0.1 205.6 / 0.11);
     --white: oklch(1 0 0);
     --input-bg: oklch(0.89 0.14 168 / 0.03);
     --card-shadow: 0 0 0 1px oklch(0.23 0.01 245);
@@ -804,17 +804,13 @@
     }
 
     .github-component {
-        padding: 1rem;
-        background-color: var(--content-bg-light);
-        border-radius: var(--br-lg);
         margin-top: 1.4rem;
-        backdrop-filter: blur(20px);
         position: relative;
         z-index: 2;
 
         & .github-header {
             padding: 0.8rem 1rem;
-            background-color: var(--content-bg);
+            background-color: var(--main-color-bg);
             border-radius: var(--br-med);
 
             & .github-brand {
@@ -842,11 +838,15 @@
         }
 
         & .repo-item {
-            padding: 0 0 0 0.3rem;
+            background-color: var(--input-bg);
+            border-radius: var(--br-med);
+            border: 1px solid var(--border-color);
 
             & h2 {
                 margin: 0;
                 font-size: 100%;
+                padding: 0.8rem 1rem 0.4rem;
+                border-bottom: 1px solid var(--border-color);
             }
 
             & p {
@@ -854,6 +854,15 @@
                 font-size: 80%;
                 line-height: 1.5;
                 color: var(--bright-color);
+                padding: 0.4rem 1rem 0.8rem;
+            }
+
+            &:hover {
+                background-color: var(--main-color-bg);
+
+                & h2 {
+                    color: var(--main-color);
+                }
             }
         }
     }
