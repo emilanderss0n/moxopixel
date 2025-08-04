@@ -435,15 +435,23 @@ export function initWorkHandlers(cards, linksDiv, titleElement, workDetails) {
         return;
     }
     
-    // Simple approach: remove any existing listeners and attach new ones
+    // More robust approach: ensure event listeners work even after DOM manipulation
     for (const card of cards) {
-        // Add a data attribute to indicate this card has been initialized
-        if (card.getAttribute('data-initialized') === 'true') {
-            continue;
+        // Remove any existing click listener first
+        if (card._workClickHandler) {
+            card.removeEventListener('click', card._workClickHandler);
         }
         
-        card.setAttribute('data-initialized', 'true');
-        card.addEventListener('click', () => handleWorkClick(card, linksDiv, titleElement, workDetails));
+        // Create and store the handler function
+        const clickHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleWorkClick(card, linksDiv, titleElement, workDetails);
+        };
+        
+        card._workClickHandler = clickHandler;
+        card.addEventListener('click', clickHandler);
+        card.setAttribute('data-click-initialized', 'true');
     }
 }
 

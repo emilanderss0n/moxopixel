@@ -59,6 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
         router.handleRoute(path, params);
     })();
 
+    // Listen for work cards needing re-initialization after resize
+    window.addEventListener('workCards:needsReinit', (event) => {
+        const cards = event.detail.cards;
+        if (cards && cards.length > 0) {
+            // Re-import and re-initialize work handlers
+            import('./workModule.js').then(module => {
+                module.initWorkHandlers(cards, linksDiv, titleElement, workDetails);
+            });
+        }
+    });
+
     // Helper function to hide all containers
     function hideAllContainers() {
         mainContainer.style.display = 'none';

@@ -108,9 +108,8 @@
 
     :focus-visible {
         outline: none;
-        box-shadow: 0 0 3px 3px var(--main-color);
+        box-shadow: inset 0 0 3px 3px var(--main-color);
         z-index: 1000;
-        border-radius: 5px;
     }
 }
 
@@ -431,9 +430,23 @@
     .content-wrap {
         --header-height: 80px;
 
-        position: relative;
-        z-index: 1;
-        background: transparent;
+        &::before {
+            content: '';
+            position: fixed;
+            inset: -1em;
+            left: 0;
+            top: 0;
+            z-index: 0;
+            opacity: 0.2;
+            mix-blend-mode: color-dodge;
+            --c: 8px;
+            background-color: #000;
+            background-image: radial-gradient(circle at 50% 50%, #0000 1.5px, #000 0 var(--c), #0000 var(--c)), radial-gradient(circle at 50% 50%, #0000 1.5px, #000 0 var(--c), #0000 var(--c)), radial-gradient(circle at 50% 50%, var(--main-color), #f000 60%), radial-gradient(circle at 50% 50%, #ff0, #ff00 60%), radial-gradient(circle at 50% 50%, #0f0, #0f00 60%), radial-gradient(ellipse at 50% 50%, #00f, #00f0 60%);
+            background-size: 12px 20.7846097px, 12px 20.7846097px, 200% 200%, 200% 200%, 200% 200%, 200% 20.7846097px;
+            --p: 0px 0px, 6px 10.39230485px;
+            background-position: var(--p), 0% 0%, 0% 0%, 0% 0px;
+            animation: wee 80s linear infinite, filt 10s linear infinite;
+        }
     }
 
     .modal-dialog {
@@ -446,9 +459,9 @@
     }
 
     .card-bfx {
-        overflow: hidden;
         position: relative;
         height: 200px;
+        backdrop-filter: blur(20px);
 
         @media screen and (max-width: 40rem) {
             height: auto;
@@ -488,7 +501,13 @@
                     will-change: opacity;
                     opacity: 0.8;
                     mask: linear-gradient(181deg, oklch(0 0 0) 50%, oklch(0 0 0 / 0.5) 100%);
-                    transition: all 0.3s linear;
+                    filter: grayscale(0.5);
+                    transition: all 0.2s linear;
+
+                    .card-bfx:hover & {
+                        opacity: 1;
+                        filter: grayscale(0);
+                    }
 
                     @container card (max-width: 40rem) {
                         width: 150px;
@@ -507,7 +526,7 @@
                         width: 100%;
                         height: 100%;
                         background: linear-gradient(180deg, transparent 50%, oklch(0 0 0 / 0.36) 100%);
-                        z-index: 2;
+                        z-index: 3;
                     }
 
                     & img {
@@ -537,6 +556,7 @@
                             & .card-title {
                                 color: var(--text-color);
                                 margin-bottom: clamp(0.5rem, 1vw, 0.5vw);
+                                font-size: 1.8rem;
 
                                 &.primary {
                                     transform: translateY(50%);
@@ -677,7 +697,7 @@
 
         &::after {
             counter-increment: section;
-            content: '0'counter(section);
+            content: '0' counter(section);
             position: absolute;
             top: 1rem;
             line-height: 1;
@@ -750,6 +770,9 @@
         background-color: var(--content-bg-light);
         border-radius: var(--br-lg);
         margin-top: 1.4rem;
+        backdrop-filter: blur(20px);
+        position: relative;
+        z-index: 2;
 
         & .github-header {
             padding: 0.8rem 1rem;
@@ -859,13 +882,13 @@
         height: fit-content;
         width: 100%;
         z-index: 1000;
-        mask: linear-gradient(oklch(0 0 0) 0%, oklch(0 0 0 / 0.8) 10%, transparent);
+        mask: linear-gradient(oklch(0 0 0) 0%, oklch(0 0 0) 60%, oklch(0 0 0 / 0) 100%);
         backdrop-filter: blur(20px);
         background-color: transparent;
         transition: all 0.5s linear;
 
         &:hover {
-            background-color: oklch(0.61 0.07 190.16 / 0.16);
+            background-color: oklch(0.37 0.04 207.7 / 0.11);
         }
 
         & .navbar-brand {
@@ -1050,6 +1073,7 @@
     #mainContentInner {
         display: none;
         flex: auto;
+        position: relative;
     }
 
     #mainContent {
@@ -1070,6 +1094,7 @@
         background-color: var(--content-bg-light);
         mask: linear-gradient(#ffffff00 0%, #000000 100px);
         padding-top: 4rem;
+        backdrop-filter: blur(20px) brightness(1.5);
 
         @container main-layout (max-width: 62.5rem) {
             --width: 100%;
@@ -1116,7 +1141,7 @@
         }
     }
 
-    .main-sidebar:has(.nav-link.about-trigger.active), 
+    .main-sidebar:has(.nav-link.about-trigger.active),
     .main-sidebar:has(.nav-link.image-gallery-trigger.active) {
         & .main-title {
             opacity: 0;
@@ -1141,6 +1166,7 @@
 
     .main-app {
         padding: 0;
+        position: relative;
         flex: auto;
     }
 
@@ -1523,6 +1549,7 @@
     }
 
     @media (max-width: var(--breakpoint-tablet)) {
+
         /* Disable hover effects on mobile/tablet */
         .card-bfx .card-title.primary {
             transform: translateY(50%) !important;
@@ -1547,6 +1574,8 @@
     #aboutContent {
         display: none;
         padding: var(--padding);
+        position: relative;
+        z-index: 1;
     }
 
     .about-content {
@@ -1632,6 +1661,10 @@
     @media (max-width: 1270px) {
         #imageContainer .body {
             grid-template-columns: repeat(2, 1fr);
+        }
+
+        .about-title {
+            margin-top: 2rem;
         }
     }
 
@@ -1780,11 +1813,14 @@
             cursor: default !important;
             pointer-events: none !important;
         }
+
+        .about-title {
+            font-size: 2rem;
+        }
     }
 
     @media (max-width: 480px) {
         .about-title {
-            font-size: 2rem;
             margin-top: 1rem;
         }
     }
@@ -1799,5 +1835,35 @@
     100% {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+@keyframes filt {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes wee {
+    0% {
+        background-position:
+            var(--p),
+            800% 400%,
+            1000% -400%,
+            -1200% -600%,
+            400% 41.5692194px;
+    }
+
+    to {
+        background-position:
+            var(--p),
+            0% 0%,
+            0% 0%,
+            0% 0%,
+            0% 0%;
     }
 }

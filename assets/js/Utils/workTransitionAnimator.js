@@ -24,6 +24,13 @@ export class WorkTransitionAnimator {
             const cards = document.querySelectorAll('.card-bfx');
             if (cards.length > 0) {
                 this.refreshHoverAnimations(cards);
+                
+                // Re-initialize click handlers after DOM manipulation
+                // Dispatch a custom event to let the main app know to re-init handlers
+                const event = new CustomEvent('workCards:needsReinit', { 
+                    detail: { cards } 
+                });
+                window.dispatchEvent(event);
             }
         }, 250);
         
@@ -221,6 +228,14 @@ export class WorkTransitionAnimator {
             const cardTag = link.querySelector('.tag-content')
             const cardImage = link.querySelector('.image > img')
             
+            // Remove any existing hover event listeners stored on the element
+            if (link._hoverEnterHandler) {
+                link.removeEventListener('mouseenter', link._hoverEnterHandler);
+            }
+            if (link._hoverLeaveHandler) {
+                link.removeEventListener('mouseleave', link._hoverLeaveHandler);
+            }
+            
             if (isMobileOrSmallTablet) {
                 // On mobile/small tablets, ensure only primary title is visible and no hover effects
                 gsap.set(headingStart, { yPercent: 0, opacity: 1 });
@@ -256,12 +271,12 @@ export class WorkTransitionAnimator {
 
             linkTL.pause()
             
-            link.addEventListener('mouseenter', () => {
-                linkTL.play()
-            })
-            link.addEventListener('mouseleave', () => {
-                linkTL.reverse()
-            })
+            // Store event handlers on the element so they can be removed later
+            link._hoverEnterHandler = () => linkTL.play();
+            link._hoverLeaveHandler = () => linkTL.reverse();
+            
+            link.addEventListener('mouseenter', link._hoverEnterHandler);
+            link.addEventListener('mouseleave', link._hoverLeaveHandler);
         })
     }
 
@@ -269,18 +284,31 @@ export class WorkTransitionAnimator {
      * Refresh hover animations when screen size changes
      */
     refreshHoverAnimations(cards) {
-        // Remove existing event listeners and reset states
+        // Instead of cloning (which removes click handlers), just reset GSAP properties
         cards.forEach(link => {
-            // Clone the element to remove all event listeners
-            const newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
+            // Kill any existing GSAP animations on this element
+            gsap.killTweensOf(link);
+            
+            // Reset all GSAP-controlled properties to their default state
+            const headingStart = link.querySelector('.card-title.primary');
+            const headingEnd = link.querySelector('.card-title.secondary');
+            const cardTag = link.querySelector('.tag-content');
+            const cardImage = link.querySelector('.image > img');
+            
+            if (headingStart) gsap.killTweensOf(headingStart);
+            if (headingEnd) gsap.killTweensOf(headingEnd);
+            if (cardTag) gsap.killTweensOf(cardTag);
+            if (cardImage) gsap.killTweensOf(cardImage);
+            
+            // More careful clearProps that won't affect event handlers
+            if (headingStart) gsap.set(headingStart, { clearProps: "transform,opacity,x,y,scale,rotation" });
+            if (headingEnd) gsap.set(headingEnd, { clearProps: "transform,opacity,x,y,scale,rotation" });
+            if (cardTag) gsap.set(cardTag, { clearProps: "transform,opacity,x,y,scale,rotation" });
+            if (cardImage) gsap.set(cardImage, { clearProps: "transform,opacity,x,y,scale,rotation" });
         });
         
-        // Get the updated cards after cloning
-        const refreshedCards = document.querySelectorAll('.card-bfx');
-        
         // Re-apply hover animations with current screen size
-        this.addHoverAnimations(refreshedCards);
+        this.addHoverAnimations(cards);
     }
 
     /**

@@ -30,21 +30,6 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
 
             const reversedItems = data.work_items.reverse();
 
-            // Pre-load all thumbnails first to avoid issues with the last items
-            const thumbnailPromises = reversedItems.map(item => {
-                const thumbnailUrl = `${baseUrl}/assets/img/work_thumbs/${item.thumb}`;
-                return fetch(thumbnailUrl, { method: 'HEAD' })
-                    .then(response => {
-                        return { item, exists: response.ok };
-                    })
-                    .catch(error => {
-                        return { item, exists: false };
-                    });
-            });
-
-            // Wait for all thumbnail checks
-            const thumbnailResults = await Promise.all(thumbnailPromises);
-
             reversedItems.forEach((item, index) => {
                 // Skip if we've already added this item
                 if (addedItemIds.has(item.id)) {
@@ -83,7 +68,7 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
 
                 // Create the image element
                 const imgElement = document.createElement('img');
-                imgElement.loading = 'lazy';
+                imgElement.loading = 'eager';
                 imgElement.alt = item.title;
                 imgElement.id = `work-image-${item.id}`;
 
