@@ -401,7 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const image of images) {
                 const container = document.createElement('div');
                 container.className = 'image-container';
-                container.dataset.imageId = image; // Add a data attribute for tracking
+                container.dataset.imageId = image;
+                container.tabIndex = 0;
 
                 const img = document.createElement('img');
                 img.className = 'thumbnail';
@@ -412,6 +413,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 container.appendChild(img);
                 imageContainerBody.appendChild(container);
+
+                // Accessibility: open zoom on Enter/Space
+                container.addEventListener('keydown', (e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && img.complete) {
+                        img.click(); // medium-zoom triggers on click
+                        e.preventDefault();
+                    }
+                });
 
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(async entry => {

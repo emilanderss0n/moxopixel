@@ -1640,8 +1640,12 @@
                 will-change: opacity, transform;
                 z-index: 1;
 
-                &:hover {
-                    opacity: 0.6;
+                &:focus-visible .thumbnail {
+                    mix-blend-mode: lighten;
+                }
+
+                &:hover .thumbnail {
+                    mix-blend-mode: lighten;
                 }
 
                 & .thumbnail {

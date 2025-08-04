@@ -1,7 +1,9 @@
 import { animateText, animateTitleElement } from './External/text-animator.js';
+import { createFocusTrap } from './Utils/utils.js';
 
 let currentPage = 1;
 let totalPages = 1;
+let galleryFocusTrap = null;
 
 export function initializeImageGallery() {
     // First, detach any existing zoom instances to prevent duplicates
@@ -16,9 +18,13 @@ export function initializeImageGallery() {
         margin: 40,
         scrollOffset: 0,
     });
-    
-    // Add swipe support for mobile devices
-    setupSwipeNavigation();
+
+    // Focus trap setup
+    const imageContainer = document.getElementById('imageContainer');
+    if (imageContainer) {
+        galleryFocusTrap = createFocusTrap(imageContainer);
+        galleryFocusTrap.activate();
+    }
 
     // Handle zoom-specific events
     const handleZoomKeyPress = (e) => {
@@ -61,6 +67,10 @@ export function initializeImageGallery() {
         document.removeEventListener('keyup', handleGlobalKeyPress);
         zoom.detach();
         removePaginationControls();
+        if (galleryFocusTrap) {
+            galleryFocusTrap.deactivate();
+            galleryFocusTrap = null;
+        }
     };
 }
 
@@ -135,38 +145,6 @@ function removePaginationControls() {
     existingPaginations.forEach(pagination => {
         pagination.remove();
     });
-}
-
-// Add swipe gesture support for mobile devices
-function setupSwipeNavigation() {
-    const imageContainer = document.getElementById('imageContainer');
-    if (!imageContainer) return;
-    
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    imageContainer.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-    
-    imageContainer.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, { passive: true });
-    
-    function handleSwipe() {
-        const swipeThreshold = 75; // minimum swipe distance
-        
-        // Left swipe (next page)
-        if (touchEndX < touchStartX - swipeThreshold) {
-            navigateToPage(currentPage + 1);
-        }
-        
-        // Right swipe (previous page)
-        if (touchEndX > touchStartX + swipeThreshold) {
-            navigateToPage(currentPage - 1);
-        }
-    }
 }
 
 // Listen for gallery page changes to replay animate-in on #imageContent
