@@ -2,6 +2,7 @@ import { fetchData } from './cache.js';
 import { initWorkHandlers } from './workModule.js'; // Updated to use unified module
 import { ImageLoader } from './Utils/imageLoader.js';
 import { workTransitionAnimator } from './Utils/workTransitionAnimator.js';
+import { whenGsapReady } from './Utils/utils.js';
 
 // Track if we've already loaded work items to prevent duplicates
 let hasLoadedWorkItems = false;
@@ -164,8 +165,26 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
             const cards = document.querySelectorAll('.card-bfx');
             initWorkHandlers(cards, linksDiv, titleElement, workDetails);
 
-            // Add entrance animation after all items are loaded
-            workTransitionAnimator.animateListingEntrance();
+            // Add entrance animation after all items are loaded, but wait for GSAP to be ready
+            whenGsapReady(() => {
+                workTransitionAnimator.animateListingEntrance();
+            }, 5000).then(success => {
+                if (!success) {
+                    console.warn('Failed to animate listing entrance - GSAP not loaded in time');
+                    // Fallback: ensure cards are visible even without animation
+                    cards.forEach(card => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'none';
+                    });
+                }
+            }).catch(error => {
+                console.error('Error in animation timing:', error);
+                // Fallback: ensure cards are visible
+                cards.forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'none';
+                });
+            });
         }
     } catch (error) {
         console.error('Error fetching work items:', error);

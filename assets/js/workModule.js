@@ -10,6 +10,7 @@ import { animateText } from './External/text-animator.js';
 import { fetchGitHubReadme } from './github.js';
 import { ensureRouterIsInitialized } from './main.js';
 import { workTransitionAnimator } from './Utils/workTransitionAnimator.js';
+import { whenGsapReady } from './Utils/utils.js';
 
 
 // State management
@@ -94,7 +95,9 @@ function handleBackClick(event, linksDiv, titleElement, workDetails) {
 
         // Trigger entrance animation for work listing
         setTimeout(() => {
-            workTransitionAnimator.animateListingEntrance();
+            whenGsapReady(() => {
+                workTransitionAnimator.animateListingEntrance();
+            }, 3000);
         }, 100);
     });
 }

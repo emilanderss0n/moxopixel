@@ -136,6 +136,36 @@
             opacity: 1;
         }
     }
+
+    @keyframes filt {
+        0% {
+            filter: hue-rotate(0deg);
+        }
+
+        to {
+            filter: hue-rotate(360deg);
+        }
+    }
+
+    @keyframes wee {
+        0% {
+            background-position:
+                var(--p),
+                800% 400%,
+                1000% -400%,
+                -1200% -600%,
+                400% 41.5692194px;
+        }
+
+        to {
+            background-position:
+                var(--p),
+                0% 0%,
+                0% 0%,
+                0% 0%,
+                0% 0%;
+        }
+    }
 }
 
 @layer reset {
@@ -462,6 +492,10 @@
         position: relative;
         height: 200px;
         backdrop-filter: blur(20px);
+        
+        /* Ensure cards are visible by default as fallback */
+        opacity: 1;
+        transform: translateY(0);
 
         @media screen and (max-width: 40rem) {
             height: auto;
@@ -1600,49 +1634,39 @@
         display: none;
         position: relative;
         z-index: 1;
+
+        & .body {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+
+            & .image-container {
+                background-color: var(--content-bg-light);
+                overflow: hidden;
+                position: relative;
+                width: 100%;
+                aspect-ratio: 1.5 / 1;
+                transition: all 0.2s ease;
+                will-change: opacity, transform;
+                z-index: 1;
+
+                &:hover {
+                    opacity: 0.6;
+                }
+
+                & .thumbnail {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--content-bg-light);
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                }
+            }
+
+        }
     }
 
-    #imageContainer .body {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
-    }
-
-    #imageContainer .body img.thumbnail {
-        position: relative;
-        width: 100%;
-        background-color: var(--content-bg-light);
-        object-fit: cover;
-    }
-
-    .thumbnail {
-        cursor: pointer;
-        transition: transform 0.3s ease;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .image-container {
-        background-color: var(--content-bg-light);
-        overflow: hidden;
-        position: relative;
-        transition: all 0.2s ease;
-        will-change: opacity, transform;
-        z-index: 1;
-    }
-
-    #imageContainer .image-container {
-        width: 100%;
-        aspect-ratio: 1.5 / 1;
-    }
-
-    #imageContainer .image-container:hover {
-        opacity: 0.6;
-    }
 }
 
 @layer responsive {
@@ -1823,47 +1847,5 @@
         .about-title {
             margin-top: 1rem;
         }
-    }
-}
-
-@keyframes inAni {
-    0% {
-        transform: translateY(5px);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes filt {
-    0% {
-        filter: hue-rotate(0deg);
-    }
-
-    to {
-        filter: hue-rotate(360deg);
-    }
-}
-
-@keyframes wee {
-    0% {
-        background-position:
-            var(--p),
-            800% 400%,
-            1000% -400%,
-            -1200% -600%,
-            400% 41.5692194px;
-    }
-
-    to {
-        background-position:
-            var(--p),
-            0% 0%,
-            0% 0%,
-            0% 0%,
-            0% 0%;
     }
 }

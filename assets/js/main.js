@@ -8,6 +8,7 @@ import { fetchGitHubData, preloadGitHubData } from './github.js';
 import { animateText, animateTitleElement } from './External/text-animator.js';
 import { setupAboutPreloading } from './about.js';
 import { scheduleIdleTask } from './Utils/utils.js';
+import { whenGsapReady, ensureCardsVisible } from './Utils/utils.js';
 
 let router;
 let workItemsLoaded = false; // Add a flag to track if work items have been loaded
@@ -52,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!workItemsLoaded) { // Only load work items once
             await fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, workDetails);
             workItemsLoaded = true;
+            
+            // Additional safety check: ensure cards are visible after 3 seconds if animation didn't run
+            setTimeout(() => {
+                ensureCardsVisible();
+            }, 3000);
         }
 
         const path = router.getPathFromUrl();
@@ -113,9 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const cards = document.querySelectorAll('.card-bfx');
                 if (cards.length > 0) {
-                    // Import and use the work transition animator
+                    // Import and use the work transition animator, wait for GSAP
                     import('./Utils/workTransitionAnimator.js').then(module => {
-                        module.workTransitionAnimator.animateListingEntrance();
+                        whenGsapReady(() => {
+                            module.workTransitionAnimator.animateListingEntrance();
+                        }, 3000);
                     });
                 }
             }, 100);

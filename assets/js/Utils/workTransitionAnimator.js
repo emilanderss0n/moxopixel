@@ -187,11 +187,30 @@ export class WorkTransitionAnimator {
      * Animate work listing entrance
      */
     animateListingEntrance() {
-        if (!window.gsap) return;
-
         const cards = document.querySelectorAll('.card-bfx');
         
+        if (!window.gsap) {
+            console.warn('GSAP not available for listing entrance animation');
+            // Fallback: ensure cards are visible
+            cards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'none';
+            });
+            return;
+        }
+
         if (cards.length > 0) {
+            // Check if cards are already visible (animation already ran or not needed)
+            const firstCard = cards[0];
+            const computedStyle = window.getComputedStyle(firstCard);
+            const currentOpacity = parseFloat(computedStyle.opacity);
+            
+            // If cards are already fully visible, don't animate again
+            if (currentOpacity >= 1) {
+                this.addHoverAnimations(cards);
+                return;
+            }
+
             gsap.fromTo(cards, {
                 opacity: 0,
                 y: 60,
@@ -205,6 +224,15 @@ export class WorkTransitionAnimator {
                 stagger: {
                     amount: 0.6,
                     from: "start"
+                },
+                onComplete: () => {
+                    // Ensure all cards are visible even if animation was interrupted
+                    cards.forEach(card => {
+                        if (parseFloat(window.getComputedStyle(card).opacity) < 1) {
+                            card.style.opacity = '1';
+                            card.style.transform = 'none';
+                        }
+                    });
                 }
             });
 

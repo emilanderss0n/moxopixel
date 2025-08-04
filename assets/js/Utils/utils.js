@@ -313,3 +313,107 @@ export function createVirtualCard(item) {
     card.classList.add('card-bfx');
     return card;
 }
+
+/**
+ * GSAP Utilities - Functions for handling GSAP loading and animations
+ */
+
+/**
+ * Wait for GSAP to be available
+ * @param {number} timeout - Maximum time to wait in milliseconds (default: 5000)
+ * @returns {Promise<boolean>} - Resolves with true when GSAP is available, false on timeout
+ */
+export function waitForGsap(timeout = 5000) {
+    return new Promise((resolve) => {
+        // If GSAP is already available, resolve immediately
+        if (window.gsap) {
+            resolve(true);
+            return;
+        }
+
+        let timeoutId;
+        let checkInterval;
+
+        // Set up timeout
+        timeoutId = setTimeout(() => {
+            clearInterval(checkInterval);
+            console.warn('GSAP loading timeout after', timeout, 'ms');
+            resolve(false);
+        }, timeout);
+
+        // Check for GSAP every 50ms
+        checkInterval = setInterval(() => {
+            if (window.gsap) {
+                clearTimeout(timeoutId);
+                clearInterval(checkInterval);
+                resolve(true);
+            }
+        }, 50);
+    });
+}
+
+/**
+ * Execute a function when GSAP is ready
+ * @param {Function} callback - Function to execute when GSAP is ready
+ * @param {number} timeout - Maximum time to wait in milliseconds (default: 5000)
+ * @returns {Promise<boolean>} - Resolves with true if callback was executed, false on timeout
+ */
+export async function whenGsapReady(callback, timeout = 5000) {
+    const isReady = await waitForGsap(timeout);
+    if (isReady && typeof callback === 'function') {
+        try {
+            // Check if page has been idle for too long and force visible state first
+            const cards = document.querySelectorAll('.card-bfx');
+            const hasInvisibleCards = Array.from(cards).some(card => {
+                const style = window.getComputedStyle(card);
+                return parseFloat(style.opacity) < 0.5;
+            });
+
+            // If page was hidden for a long time or cards are invisible, show them immediately
+            if (document.hidden || hasInvisibleCards) {
+                console.log('Page visibility issue detected, ensuring cards are visible before animation');
+                ensureCardsVisible();
+                
+                // Wait a frame before running animation
+                requestAnimationFrame(() => {
+                    callback();
+                });
+            } else {
+                callback();
+            }
+            return true;
+        } catch (error) {
+            console.error('Error executing GSAP ready callback:', error);
+            // Fallback: ensure cards are visible
+            ensureCardsVisible();
+            return false;
+        }
+    }
+    return false;
+}
+
+/**
+ * Global safety mechanism to ensure cards are visible even if animations fail
+ * This should be called as a last resort safety mechanism
+ */
+let lastEnsureCardsVisibleCall = 0;
+export function ensureCardsVisible() {
+    // Prevent multiple calls within 1 second to avoid duplicate safety mechanism logs
+    const now = Date.now();
+    if (now - lastEnsureCardsVisibleCall < 1000) {
+        return;
+    }
+    lastEnsureCardsVisibleCall = now;
+
+    const cards = document.querySelectorAll('.card-bfx');
+    cards.forEach(card => {
+        const computedStyle = window.getComputedStyle(card);
+        const currentOpacity = parseFloat(computedStyle.opacity);
+        if (currentOpacity < 0.5) { // If card is mostly invisible
+            card.style.opacity = '1';
+            card.style.transform = 'none';
+            card.style.scale = '1';
+            card.style.transition = 'none'; // Remove any stuck transitions
+        }
+    });
+}
