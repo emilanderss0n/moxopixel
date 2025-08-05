@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // More reliable work details route handler
     router.addRoute('work-details', async (params) => {
         // Import utilities from utils.js instead of workUtils.js
-        const { findCardByIdOrSlug, createVirtualCard } = await import('./Utils/utils.js');
+        const { findCardByIdOrSlug } = await import('./Utils/utils.js');
         // Find card by ID or slug
         let card = findCardByIdOrSlug(params.id);
         

@@ -54,7 +54,6 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 linkElement.dataset.coding_languages = `${JSON.stringify(item.work_meta.coding_languages)}`;
                 linkElement.dataset.software_used = `${JSON.stringify(item.work_meta.software_used)}`;
                 linkElement.classList.add('card-bfx');
-                linkElement.classList.add('list__item');
                 linkElement.id = `work-card-${item.id}`;
 
                 const cardBody = document.createElement('div');

@@ -293,28 +293,6 @@ export function findCardByIdOrSlug(idOrSlug) {
 }
 
 /**
- * Creates a virtual card element from a work item object
- * @param {Object} item - The work item data
- * @returns {HTMLElement} The virtual card element
- */
-export function createVirtualCard(item) {
-    const card = document.createElement('a');
-    card.dataset.class = `desc_${item.id}`;
-    card.dataset.slider_img = item.slider_images[0].image;
-    card.dataset.slider_images = JSON.stringify(item.slider_images);
-    card.dataset.title = item.title;
-    card.dataset.web = item.work_meta.website;
-    card.dataset.category_one = item.work_meta.category;
-    card.dataset.category_two = item.work_meta.category_two;
-    card.dataset.github = item.github;
-    card.dataset.useGithubReadme = item.useGithubReadme === true ? 'true' : 'false';
-    card.dataset.coding_languages = JSON.stringify(item.work_meta.coding_languages);
-    card.dataset.software_used = JSON.stringify(item.work_meta.software_used);
-    card.classList.add('card-bfx');
-    return card;
-}
-
-/**
  * GSAP Utilities - Functions for handling GSAP loading and animations
  */
 

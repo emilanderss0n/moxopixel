@@ -45,8 +45,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
         }
     </script>
 
-
-
     <div class="content-wrap">
         <nav class="navbar flex-default animate-in">
             <a class="navbar-brand" href="./" tabindex="-1"><img src="assets/img/moxopixel_logo.png" alt="MoxoPixel Logotype"/></a>
