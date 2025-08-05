@@ -1647,6 +1647,7 @@
         display: none;
         position: relative;
         z-index: 1;
+        padding-top: 2rem;
 
         & .body {
             display: grid;
@@ -1754,6 +1755,10 @@
 
         #imageContainer .body img.thumbnail {
             height: 180px;
+        }
+
+        .pagination-controls.pagination-top {
+            display: none;
         }
 
         .work-details {
