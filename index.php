@@ -12,7 +12,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <title>MOXOPIXEL // Game Art</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
     <meta name="description" content="Modding work of MoxoPixel. MoxoPixel has been creating digital art for 20+ years." />
-    <meta property="og:image" content="assets/img/icon.png" />
+    <meta property="og:image" content="assets/img/favicon.ico" />
     <meta property="og:description" content="Modding work of MoxoPixel. MoxoPixel has been creating digital art for 20+ years." />
     <meta property="og:title" content="MOXOPIXEL // Game Art" />
     <meta name="view-transition" content="same-origin" />
@@ -22,7 +22,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <link rel="stylesheet" type="text/css" href="assets/css/medium-zoom.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
     
-    <link rel="icon" href="assets/img/favicon.png">
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
 
     <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" 
           rel="stylesheet"
