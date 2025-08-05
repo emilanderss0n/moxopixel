@@ -166,23 +166,20 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
 
             // Add entrance animation after all items are loaded, but wait for GSAP to be ready
             whenGsapReady(() => {
-                workTransitionAnimator.animateListingEntrance();
-            }, 5000).then(success => {
+                workTransitionAnimator.animateListingEntrance({
+                    duration: 0.8,
+                    stagger: 0.6,
+                    respectPrefersReducedMotion: true
+                });
+            }, 5000, { 
+                checkVisibility: true,
+                fallbackOnError: true 
+            }).then(success => {
                 if (!success) {
                     console.warn('Failed to animate listing entrance - GSAP not loaded in time');
-                    // Fallback: ensure cards are visible even without animation
-                    cards.forEach(card => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'none';
-                    });
                 }
             }).catch(error => {
                 console.error('Error in animation timing:', error);
-                // Fallback: ensure cards are visible
-                cards.forEach(card => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'none';
-                });
             });
         }
     } catch (error) {

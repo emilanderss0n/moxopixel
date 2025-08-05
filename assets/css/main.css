@@ -496,6 +496,7 @@
         position: relative;
         height: 200px;
         z-index: 1;
+        opacity: 0;
         transform: translateY(0);
 
         @media screen and (max-width: 40rem) {
@@ -1761,10 +1762,6 @@
             display: none;
         }
 
-        .work-details {
-            padding-top: 0;
-        }
-
         .work-header {
             background-color: var(--content-bg);
         }
@@ -1827,10 +1824,18 @@
             --padding-xl: 4rem !important;
         }
 
-        #mainContainer .links .card-title {
-            margin-bottom: 0.3rem;
-            font-size: 1.3rem;
-            font-family: "Tektur", sans-serif;
+        #mainContainer .links .titles-wrapper {
+            height: auto;
+
+            & .card-title {
+                margin-bottom: 0.5rem;
+                font-size: 1.3rem;
+                transform: none !important;
+
+                &.secondary {
+                    display: none;
+                }
+            }
         }
 
         .work-header {

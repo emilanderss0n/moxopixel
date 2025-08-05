@@ -184,61 +184,159 @@ export class WorkTransitionAnimator {
     }
 
     /**
-     * Animate work listing entrance
+     * Animate work listing entrance with improved performance and accessibility
+     * @param {Object} options - Animation options
+     * @param {boolean} options.force - Force animation even if cards are visible (default: false)
+     * @param {number} options.duration - Animation duration in seconds (default: 0.8)
+     * @param {number} options.stagger - Stagger amount in seconds (default: 0.6)
+     * @param {boolean} options.respectPrefersReducedMotion - Respect user's motion preferences (default: true)
      */
-    animateListingEntrance() {
+    animateListingEntrance(options = {}) {
+        const { 
+            force = false, 
+            duration = 0.8, 
+            stagger = 0.6, 
+            respectPrefersReducedMotion = true 
+        } = options;
+
         const cards = document.querySelectorAll('.card-bfx');
         
-        if (!window.gsap) {
-            console.warn('GSAP not available for listing entrance animation');
-            // Fallback: ensure cards are visible
-            cards.forEach(card => {
-                card.style.opacity = '1';
-                card.style.transform = 'none';
-            });
+        if (cards.length === 0) {
+            console.warn('No work cards found for listing entrance animation');
             return;
         }
 
-        if (cards.length > 0) {
-            // Check if cards are already visible (animation already ran or not needed)
+        // Check for reduced motion preference
+        const prefersReducedMotion = respectPrefersReducedMotion && 
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!window.gsap) {
+            console.warn('GSAP not available for listing entrance animation');
+            this.fallbackEntrance(cards);
+            return;
+        }
+
+        // Optimized visibility check - only check first and last card
+        if (!force) {
             const firstCard = cards[0];
-            const computedStyle = window.getComputedStyle(firstCard);
-            const currentOpacity = parseFloat(computedStyle.opacity);
+            const lastCard = cards[cards.length - 1];
+            const firstOpacity = parseFloat(window.getComputedStyle(firstCard).opacity);
+            const lastOpacity = parseFloat(window.getComputedStyle(lastCard).opacity);
             
-            // If cards are already fully visible, don't animate again
-            if (currentOpacity >= 1) {
+            // If both first and last cards are visible, assume all are visible
+            if (firstOpacity >= 1 && lastOpacity >= 1) {
                 this.addHoverAnimations(cards);
                 return;
             }
+        }
 
-            gsap.fromTo(cards, {
+        // Kill any existing timeline to prevent conflicts
+        if (this.currentTl) {
+            this.currentTl.kill();
+        }
+
+        // Create optimized animation
+        this.currentTl = gsap.timeline({
+            onComplete: () => {
+                // Cleanup and ensure accessibility
+                this.ensureAnimationComplete(cards);
+                this.addHoverAnimations(cards);
+            }
+        });
+
+        if (prefersReducedMotion) {
+            // Simplified animation for reduced motion preference
+            this.currentTl.fromTo(cards, {
+                opacity: 0
+            }, {
+                opacity: 1,
+                duration: 0.3,
+                ease: "none",
+                stagger: 0.1
+            });
+        } else {
+            // Full animation with proper performance settings
+            this.currentTl.fromTo(cards, {
                 opacity: 0,
                 y: 60,
-                scale: 0.9
+                scale: 0.9,
+                rotationX: 10
             }, {
                 opacity: 1,
                 y: 0,
                 scale: 1,
-                duration: 0.8,
+                rotationX: 0,
+                duration: duration,
                 ease: "power3.out",
                 stagger: {
-                    amount: 0.6,
+                    amount: stagger,
                     from: "start"
                 },
-                onComplete: () => {
-                    // Ensure all cards are visible even if animation was interrupted
+                // Use will-change for better performance
+                onStart: () => {
                     cards.forEach(card => {
-                        if (parseFloat(window.getComputedStyle(card).opacity) < 1) {
-                            card.style.opacity = '1';
-                            card.style.transform = 'none';
-                        }
+                        card.style.willChange = 'transform, opacity';
+                    });
+                },
+                onComplete: () => {
+                    cards.forEach(card => {
+                        card.style.willChange = 'auto';
                     });
                 }
             });
-
-            // Add hover animations
-            this.addHoverAnimations(cards);
         }
+    }
+
+    /**
+     * Fallback entrance animation when GSAP is not available
+     * @param {NodeList} cards - The card elements to animate
+     */
+    fallbackEntrance(cards) {
+        cards.forEach((card, index) => {
+            // Reset any stuck styles
+            card.style.cssText = '';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            // Stagger the appearance
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                
+                // Clean up transition after animation
+                setTimeout(() => {
+                    card.style.transition = '';
+                }, 300);
+            }, index * 100);
+        });
+    }
+
+    /**
+     * Ensure animation completed successfully and setup accessibility
+     * @param {NodeList} cards - The card elements to check
+     */
+    ensureAnimationComplete(cards) {
+        cards.forEach((card, index) => {
+            const computedStyle = window.getComputedStyle(card);
+            const opacity = parseFloat(computedStyle.opacity);
+            
+            // Force visibility if animation failed
+            if (opacity < 1) {
+                card.style.opacity = '1';
+                card.style.transform = 'none';
+            }
+            
+            // Ensure proper accessibility attributes
+            if (!card.hasAttribute('tabindex')) {
+                card.setAttribute('tabindex', '0');
+            }
+            
+            // Add ARIA labels if missing
+            if (!card.hasAttribute('aria-label') && card.dataset.title) {
+                card.setAttribute('aria-label', `View details for ${card.dataset.title}`);
+            }
+        });
     }
 
     /**
@@ -383,37 +481,31 @@ export class WorkTransitionAnimator {
     }
 
     /**
-     * Cancel current animation
+     * Cancel any running animations and cleanup
      */
     cancel() {
         if (this.currentTl) {
             this.currentTl.kill();
             this.currentTl = null;
         }
-        
-        // Force cleanup of any problematic elements
-        const problematicCards = document.querySelectorAll('.card-bfx[style*="position: fixed"], .card-bfx[style*="z-index: 1001"]');
-        problematicCards.forEach(card => {
-            gsap.set(card, { clearProps: "all" });
-        });
-        
-        // Reset all cards to default state
-        const allCards = document.querySelectorAll('.card-bfx');
-        gsap.set(allCards, { 
-            opacity: 1, 
-            scale: 1, 
-            zIndex: "auto",
-            clearProps: "all"
-        });
-        
-        // Remove clicked class from all cards
-        allCards.forEach(card => {
-            card.classList.remove('clicked');
-        });
-        
         this.isAnimating = false;
+        this.cleanupTransition();
+    }
+
+    /**
+     * Cleanup method for memory management
+     */
+    destroy() {
+        this.cancel();
         
-        // Reset state
+        // Remove resize listener
+        if (this.handleResize) {
+            window.removeEventListener('resize', this.handleResize);
+            this.handleResize = null;
+        }
+        
+        // Clear any stored references
+        this.expandedCard = null;
         this.state = {
             originalCard: null,
             originalImage: null,
@@ -421,14 +513,6 @@ export class WorkTransitionAnimator {
             clonedCard: null,
             overlay: null
         };
-    }
-
-    /**
-     * Destroy the animator instance and clean up event listeners
-     */
-    destroy() {
-        this.cancel();
-        window.removeEventListener('resize', this.handleResize);
     }
 }
 

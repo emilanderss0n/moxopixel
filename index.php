@@ -119,7 +119,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
                             
                         </div>
 
-                        <div class="links animate-in animate-d2"></div>
+                        <div class="links"></div>
 
                     </div>
 
@@ -149,8 +149,8 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <!-- Optimize script loading -->
     <script src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"></script> 
 
+    <script src="serve-module.php?file=External/gsap.min.js"></script>
     <script defer src="serve-module.php?file=External/medium-zoom.js"></script>
-    <script defer src="serve-module.php?file=External/gsap.min.js"></script>
     <script defer src="serve-module.php?file=/External/split-type.min.js"></script>
     <script type="module" src="serve-module.php?file=main.js"></script>
 

@@ -163,22 +163,6 @@ export function createFocusTrap(containerElement) {
  */
 
 /**
- * Debounces a function call, limiting how often it can fire
- * @param {Function} func The function to debounce
- * @param {number} delay Delay in milliseconds
- * @returns {Function} Debounced function
- */
-export const debounce = (func, delay) => {
-  let timerId;
-  return (...args) => {
-    clearTimeout(timerId);
-    timerId = setTimeout(() => {
-      func.apply(this, args);
-    }, delay);
-  };
-};
-
-/**
  * Throttle function calls to limit execution rate
  * @param {Function} func The function to throttle
  * @param {number} limit Time limit in milliseconds
@@ -331,67 +315,208 @@ export function waitForGsap(timeout = 5000) {
 }
 
 /**
- * Execute a function when GSAP is ready
+ * Execute a function when GSAP is ready with improved error handling and performance
  * @param {Function} callback - Function to execute when GSAP is ready
  * @param {number} timeout - Maximum time to wait in milliseconds (default: 5000)
+ * @param {Object} options - Additional options
+ * @param {boolean} options.fallbackOnError - Whether to show fallback UI on error (default: true)
+ * @param {boolean} options.checkVisibility - Whether to check element visibility before animation (default: true)
  * @returns {Promise<boolean>} - Resolves with true if callback was executed, false on timeout
  */
-export async function whenGsapReady(callback, timeout = 5000) {
-    const isReady = await waitForGsap(timeout);
-    if (isReady && typeof callback === 'function') {
-        try {
-            // Check if page has been idle for too long and force visible state first
-            const cards = document.querySelectorAll('.card-bfx');
-            const hasInvisibleCards = Array.from(cards).some(card => {
-                const style = window.getComputedStyle(card);
-                return parseFloat(style.opacity) < 0.5;
-            });
-
-            // If page was hidden for a long time or cards are invisible, show them immediately
-            if (document.hidden || hasInvisibleCards) {
-                console.log('Page visibility issue detected, ensuring cards are visible before animation');
-                ensureCardsVisible();
-                
-                // Wait a frame before running animation
-                requestAnimationFrame(() => {
-                    callback();
-                });
-            } else {
-                callback();
-            }
-            return true;
-        } catch (error) {
-            console.error('Error executing GSAP ready callback:', error);
-            // Fallback: ensure cards are visible
-            ensureCardsVisible();
-            return false;
-        }
+export async function whenGsapReady(callback, timeout = 5000, options = {}) {
+    const { fallbackOnError = true, checkVisibility = true } = options;
+    
+    if (typeof callback !== 'function') {
+        console.warn('whenGsapReady: Invalid callback provided');
+        return false;
     }
-    return false;
+
+    const isReady = await waitForGsap(timeout);
+    if (!isReady) {
+        console.warn('GSAP not ready, executing fallback');
+        if (fallbackOnError) {
+            ensureCardsVisible();
+        }
+        return false;
+    }
+
+    try {
+        // Optimized visibility check - only run if requested and elements exist
+        if (checkVisibility) {
+            const shouldEnsureVisibility = document.hidden || 
+                (document.querySelectorAll('.card-bfx[style*="opacity: 0"]').length > 0);
+
+            if (shouldEnsureVisibility) {
+                ensureCardsVisible();
+                // Use RAF for better performance than setTimeout
+                return new Promise(resolve => {
+                    requestAnimationFrame(() => {
+                        try {
+                            callback();
+                            resolve(true);
+                        } catch (error) {
+                            console.error('Error in GSAP callback after visibility fix:', error);
+                            resolve(false);
+                        }
+                    });
+                });
+            }
+        }
+
+        // Execute callback immediately if no visibility issues
+        callback();
+        return true;
+        
+    } catch (error) {
+        console.error('Error executing GSAP ready callback:', error);
+        if (fallbackOnError) {
+            ensureCardsVisible();
+        }
+        return false;
+    }
 }
 
 /**
  * Global safety mechanism to ensure cards are visible even if animations fail
- * This should be called as a last resort safety mechanism
+ * Improved with better performance and accessibility
  */
 let lastEnsureCardsVisibleCall = 0;
 export function ensureCardsVisible() {
-    // Prevent multiple calls within 1 second to avoid duplicate safety mechanism logs
+    // Throttle calls to prevent performance issues
     const now = Date.now();
-    if (now - lastEnsureCardsVisibleCall < 1000) {
+    if (now - lastEnsureCardsVisibleCall < 500) {
         return;
     }
     lastEnsureCardsVisibleCall = now;
 
     const cards = document.querySelectorAll('.card-bfx');
-    cards.forEach(card => {
-        const computedStyle = window.getComputedStyle(card);
-        const currentOpacity = parseFloat(computedStyle.opacity);
-        if (currentOpacity < 0.5) { // If card is mostly invisible
-            card.style.opacity = '1';
-            card.style.transform = 'none';
-            card.style.scale = '1';
-            card.style.transition = 'none'; // Remove any stuck transitions
+    if (cards.length === 0) return;
+
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+        cards.forEach((card, index) => {
+            const computedStyle = window.getComputedStyle(card);
+            const currentOpacity = parseFloat(computedStyle.opacity);
+            
+            if (currentOpacity < 0.5) {
+                // Reset all transform properties at once
+                card.style.cssText += `
+                    opacity: 1 !important;
+                    transform: none !important;
+                    scale: 1 !important;
+                    transition: none !important;
+                    visibility: visible !important;
+                `;
+                
+                // Ensure proper tabindex for accessibility
+                if (!card.hasAttribute('tabindex')) {
+                    card.setAttribute('tabindex', '0');
+                }
+                
+                // Add a slight delay between cards for smoother appearance
+                if (index > 0) {
+                    card.style.animationDelay = `${index * 50}ms`;
+                }
+            }
+        });
+    });
+}
+
+/**
+ * Animation Performance Utilities
+ */
+
+/**
+ * Create a performance-optimized GSAP animation with monitoring
+ * @param {string} animationName - Name for debugging purposes
+ * @param {Function} animationCallback - Function that creates and returns the GSAP timeline
+ * @param {Object} options - Performance options
+ * @returns {Promise} - Resolves when animation completes
+ */
+export function createOptimizedAnimation(animationName, animationCallback, options = {}) {
+    const { 
+        timeout = 10000, 
+        logPerformance = false,
+        fallbackCallback = null 
+    } = options;
+
+    return new Promise((resolve, reject) => {
+        const startTime = performance.now();
+        
+        if (!window.gsap) {
+            console.warn(`Animation "${animationName}" skipped - GSAP not available`);
+            if (fallbackCallback) fallbackCallback();
+            resolve(false);
+            return;
+        }
+
+        try {
+            const timeline = animationCallback();
+            
+            if (!timeline || typeof timeline.then !== 'function') {
+                console.warn(`Animation "${animationName}" returned invalid timeline`);
+                resolve(false);
+                return;
+            }
+
+            // Set up timeout protection
+            const timeoutId = setTimeout(() => {
+                console.warn(`Animation "${animationName}" timed out after ${timeout}ms`);
+                if (fallbackCallback) fallbackCallback();
+                resolve(false);
+            }, timeout);
+
+            // Handle completion
+            timeline.then(() => {
+                clearTimeout(timeoutId);
+                const duration = performance.now() - startTime;
+                
+                if (logPerformance) {
+                    console.log(`Animation "${animationName}" completed in ${duration.toFixed(2)}ms`);
+                }
+                
+                resolve(true);
+            }).catch(error => {
+                clearTimeout(timeoutId);
+                console.error(`Animation "${animationName}" failed:`, error);
+                if (fallbackCallback) fallbackCallback();
+                reject(error);
+            });
+
+        } catch (error) {
+            console.error(`Error creating animation "${animationName}":`, error);
+            if (fallbackCallback) fallbackCallback();
+            reject(error);
         }
     });
+}
+
+/**
+ * Debounce function calls for better performance
+ * @param {Function} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @param {boolean} immediate - Execute immediately on first call
+ * @returns {Function} - Debounced function
+ */
+export function debounce(func, wait, immediate = false) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            timeout = null;
+            if (!immediate) func.apply(this, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(this, args);
+    };
+}
+
+/**
+ * Check if animations should be reduced based on user preferences
+ * @returns {boolean} - True if animations should be reduced
+ */
+export function shouldReduceMotion() {
+    return window.matchMedia && 
+           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }

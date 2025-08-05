@@ -96,8 +96,12 @@ function handleBackClick(event, linksDiv, titleElement, workDetails) {
         // Trigger entrance animation for work listing
         setTimeout(() => {
             whenGsapReady(() => {
-                workTransitionAnimator.animateListingEntrance();
-            }, 3000);
+                workTransitionAnimator.animateListingEntrance({
+                    force: true, // Force since we're coming back from details
+                    duration: 0.7,
+                    stagger: 0.5
+                });
+            }, 3000, { checkVisibility: false }); // Skip visibility check since we're forcing
         }, 100);
     });
 }

@@ -122,8 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Import and use the work transition animator, wait for GSAP
                     import('./Utils/workTransitionAnimator.js').then(module => {
                         whenGsapReady(() => {
-                            module.workTransitionAnimator.animateListingEntrance();
-                        }, 3000);
+                            module.workTransitionAnimator.animateListingEntrance({ 
+                                force: true, // Force animation since we're returning from details
+                                duration: 0.6, // Slightly faster return animation
+                                stagger: 0.4 
+                            });
+                        }, 3000, { checkVisibility: false }); // Skip visibility check since we're forcing
                     });
                 }
             }, 100);
