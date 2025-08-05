@@ -919,13 +919,29 @@
         position: fixed;
         top: 0;
         left: 0;
-        height: fit-content;
+        height: 140px;
         width: 100%;
         z-index: 1000;
-        mask: linear-gradient(oklch(0 0 0) 0%, oklch(0 0 0) 60%, oklch(0 0 0 / 0) 100%);
+        mask: linear-gradient(oklch(0 0 0) 0%, oklch(0 0 0) 30%, oklch(0 0 0 / 0) 100%);
         backdrop-filter: blur(20px);
         background-color: transparent;
         transition: all 0.5s linear;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(../img/light.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+            filter: hue-rotate(292deg);
+            z-index: -1;
+        }
 
         &:hover {
             background-color: oklch(0.37 0.04 207.7 / 0.11);
@@ -1781,8 +1797,12 @@
             padding-top: 4rem;
         }
 
-        .navbar {
-            align-items: center;
+        #navbarSupportedContent {
+            transform: translateY(-0.5rem);
+        }
+
+        .navbar::after {
+            background-size: auto;
         }
 
         .navbar-brand > img {
