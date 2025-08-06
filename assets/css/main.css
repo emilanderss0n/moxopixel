@@ -1747,6 +1747,10 @@
             display: none;
         }
 
+        .content-wrap::before {
+            display: none;
+        }
+
         #imageContainer {
             flex: 1;
         }
