@@ -4,8 +4,9 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
     
     <meta charset="UTF-8" />
     <base href="<?php echo $base; ?>">
@@ -17,17 +18,15 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <meta property="og:title" content="MOXOPIXEL // Game Art" />
     <meta name="view-transition" content="same-origin" />
 
+    <link rel="preload" href="assets/css/main.css" as="style">
+    <link rel="preload" href="assets/img/light.png" as="image">
+
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" type="text/css" href="assets/css/medium-zoom.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/medium-zoom.css">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
     
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
-
-    <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" 
-          rel="stylesheet"
-          media="print"
-          onload="this.media='all'">
 
     <style>
         .fonts-loading {
