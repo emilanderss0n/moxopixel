@@ -520,3 +520,25 @@ export function shouldReduceMotion() {
     return window.matchMedia && 
            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
+
+/**
+ * Reset cards to their natural visible state without animation
+ * Used when returning from other routes to avoid animation conflicts
+ */
+export function resetCardsToNaturalState() {
+    const cards = document.querySelectorAll('.card-bfx');
+    cards.forEach(card => {
+        // Reset to natural state without triggering animations
+        card.style.opacity = '';
+        card.style.transform = '';
+        card.style.scale = '';
+        card.style.visibility = '';
+        card.style.display = '';
+        card.style.position = '';
+        card.style.top = '';
+        card.style.left = '';
+        card.style.zIndex = '';
+        card.style.transition = '';
+        card.style.willChange = '';
+    });
+}

@@ -165,22 +165,50 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
             initWorkHandlers(cards, linksDiv, titleElement, workDetails);
 
             // Add entrance animation after all items are loaded, but wait for GSAP to be ready
-            whenGsapReady(() => {
-                workTransitionAnimator.animateListingEntrance({
-                    duration: 0.8,
-                    stagger: 0.6,
-                    respectPrefersReducedMotion: true
-                });
-            }, 5000, { 
-                checkVisibility: true,
-                fallbackOnError: true 
-            }).then(success => {
-                if (!success) {
-                    console.warn('Failed to animate listing entrance - GSAP not loaded in time');
+            // Check if we should animate based on the router's animation state
+            const shouldAnimate = !window.cardAnimationState || 
+                                 (!window.cardAnimationState.hasInitiallyAnimated);
+            
+            if (shouldAnimate) {
+                // Mark that we're animating
+                if (window.router) {
+                    window.router.setAnimating(true);
                 }
-            }).catch(error => {
-                console.error('Error in animation timing:', error);
-            });
+                
+                whenGsapReady(() => {
+                    workTransitionAnimator.animateListingEntrance({
+                        duration: 0.8,
+                        stagger: 0.6,
+                        respectPrefersReducedMotion: true
+                    });
+                    
+                    // Mark animation as complete
+                    if (window.router) {
+                        window.router.setAnimating(false);
+                    }
+                }, 5000, { 
+                    checkVisibility: true,
+                    fallbackOnError: true 
+                }).then(success => {
+                    if (!success) {
+                        console.warn('Failed to animate listing entrance - GSAP not loaded in time');
+                    }
+                    // Mark as not animating regardless of success/failure
+                    if (window.router) {
+                        window.router.setAnimating(false);
+                    }
+                }).catch(error => {
+                    console.error('Error in animation timing:', error);
+                    // Mark as not animating even if failed
+                    if (window.router) {
+                        window.router.setAnimating(false);
+                    }
+                });
+            } else {
+                // Cards should not be animated (probably returning from another route)
+                // Let the route handler manage the animation
+                console.log('Skipping initial animation - will be handled by route transition');
+            }
         }
     } catch (error) {
         console.error('Error fetching work items:', error);

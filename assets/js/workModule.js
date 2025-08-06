@@ -95,12 +95,21 @@ function handleBackClick(event, linksDiv, titleElement, workDetails) {
 
         // Trigger entrance animation for work listing
         setTimeout(() => {
+            // Only animate if we haven't already animated or if forced
+            if (window.router) {
+                window.router.setAnimating(true);
+            }
+            
             whenGsapReady(() => {
                 workTransitionAnimator.animateListingEntrance({
                     force: true, // Force since we're coming back from details
                     duration: 0.7,
                     stagger: 0.5
                 });
+                
+                if (window.router) {
+                    window.router.setAnimating(false);
+                }
             }, 3000, { checkVisibility: false }); // Skip visibility check since we're forcing
         }, 100);
     });

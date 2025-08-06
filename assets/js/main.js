@@ -8,7 +8,7 @@ import { fetchGitHubData, preloadGitHubData } from './github.js';
 import { animateText, animateTitleElement } from './External/text-animator.js';
 import { setupAboutPreloading } from './about.js';
 import { scheduleIdleTask } from './Utils/utils.js';
-import { whenGsapReady, ensureCardsVisible } from './Utils/utils.js';
+import { whenGsapReady, ensureCardsVisible, resetCardsToNaturalState } from './Utils/utils.js';
 
 let router;
 let workItemsLoaded = false; // Add a flag to track if work items have been loaded
@@ -54,10 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, workDetails);
             workItemsLoaded = true;
             
-            // Additional safety check: ensure cards are visible after 3 seconds if animation didn't run
+            // Let the router know initial animation will complete
             setTimeout(() => {
-                ensureCardsVisible();
-            }, 3000);
+                if (window.router) {
+                    window.router.setInitiallyAnimated(true);
+                }
+            }, 2000);
         }
 
         const path = router.getPathFromUrl();
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Helper function to hide all containers
+    // Helper function to hide all containers while preserving card visibility
     function hideAllContainers() {
         mainContainer.style.display = 'none';
         imageContainer.style.display = 'none';
@@ -84,6 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (workDetails) {
             workDetails.style.display = 'none';
         }
+        
+        // Ensure cards within containers don't get inadvertently hidden
+        // by preserving their individual styling
+        const cards = document.querySelectorAll('.card-bfx');
+        cards.forEach(card => {
+            // Don't reset card styles when hiding containers
+            // Only reset problematic fixed positioning from transitions
+            if (card.style.position === 'fixed') {
+                card.style.position = '';
+                card.style.top = '';
+                card.style.left = '';
+                card.style.zIndex = '';
+            }
+        });
     }
     
     // Define routes without view transitions
@@ -113,31 +129,59 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         titleElement.classList.remove('back-link');
 
-        // Handle transition from work details if coming from browser back button
+        // Handle different scenarios with the router's animation state
+        const cards = document.querySelectorAll('.card-bfx');
+        
         if (comingFromWorkDetails) {
-            // Trigger the listing entrance animation
+            // Coming from work details - animate entrance
             setTimeout(() => {
-                const cards = document.querySelectorAll('.card-bfx');
                 if (cards.length > 0) {
-                    // Import and use the work transition animator, wait for GSAP
+                    router.setAnimating(true);
                     import('./Utils/workTransitionAnimator.js').then(module => {
                         whenGsapReady(() => {
                             module.workTransitionAnimator.animateListingEntrance({ 
-                                force: true, // Force animation since we're returning from details
-                                duration: 0.6, // Slightly faster return animation
+                                force: true,
+                                duration: 0.6,
                                 stagger: 0.4 
                             });
-                        }, 3000, { checkVisibility: false }); // Skip visibility check since we're forcing
+                            router.setAnimating(false);
+                        }, 3000, { checkVisibility: false });
                     });
                 }
             }, 100);
-        } else {
-            // Don't re-initialize here, just ensure they're visible
-            const cards = document.querySelectorAll('.card-bfx');
+        } else if (router.animationState.hasInitiallyAnimated) {
+            // Coming from Gallery/About - hide cards first, then animate entrance after delay
+            // First, immediately hide all cards
             cards.forEach(card => {
-                if (card.style.display === 'none') {
-                    card.style.display = '';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(60px) scale(0.9)';
+                card.style.visibility = 'visible';
+            });
+            
+            // After 500ms delay, trigger the entrance animation
+            setTimeout(() => {
+                if (cards.length > 0 && !router.animationState.isAnimating) {
+                    router.setAnimating(true);
+                    import('./Utils/workTransitionAnimator.js').then(module => {
+                        whenGsapReady(() => {
+                            module.workTransitionAnimator.animateListingEntrance({ 
+                                force: true, // Force animation even though they were previously animated
+                                duration: 0.5, // Faster animation for returning from other routes
+                                stagger: 0.3, // Quicker stagger
+                                respectPrefersReducedMotion: true
+                            });
+                            router.setAnimating(false);
+                        }, 3000, { checkVisibility: false });
+                    });
                 }
+            }, 500); // 500ms delay before animation starts
+        } else if (!router.animationState.isAnimating) {
+            // First time loading and not currently animating - let initWorks handle it
+            // Just ensure cards are ready for animation
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(60px) scale(0.9)';
+                card.style.visibility = 'visible';
             });
         }
 
