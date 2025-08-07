@@ -70,7 +70,7 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 const imgElement = document.createElement('img');
                 imgElement.loading = 'eager';
                 imgElement.alt = item.title;
-                imgElement.id = `work-image-${item.id}`;
+                imgElement.classList.add('work-thumb');
 
                 // Store original thumb file path
                 const originalThumbPath = `${baseUrl}/assets/img/work_thumbs/${item.thumb}`;
@@ -98,8 +98,24 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 // Append the image to the container first
                 imageDiv.appendChild(imgElement);
 
+                // Add a cloned thumbnail with 'work-thumb-blur' class instead of 'work-thumb'
+                const imgClone = imgElement.cloneNode(true);
+                imgClone.classList.remove('work-thumb');
+                imgClone.classList.add('work-thumb-blur');
+                imageDiv.appendChild(imgClone);
+
+                // Add thumb ring divs directly under the images
+                const thumbRing = document.createElement('div');
+                thumbRing.classList.add('thumb-ring');
+                imageDiv.appendChild(thumbRing);
+
+                const thumbRingOuter = document.createElement('div');
+                thumbRingOuter.classList.add('thumb-ring', 'thumb-ring-outer');
+                imageDiv.appendChild(thumbRingOuter);
+
                 // Always use direct loading approach for all thumbnails
                 imgElement.src = originalThumbPath;
+                imgClone.src = originalThumbPath;
 
                 const infoDiv = document.createElement('div');
                 infoDiv.classList.add('info');
