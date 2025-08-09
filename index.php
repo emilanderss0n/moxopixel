@@ -16,14 +16,12 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <meta name="keywords" content="MoxoPixel, game modding, Escape from Tarkov, 3D texturing, game art, portfolio, TypeScript, Blender, Photoshop" />
     <meta name="author" content="MoxoPixel" />
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>" />
     <meta property="og:title" content="MOXOPIXEL // Game Art Portfolio" />
     <meta property="og:description" content="Portfolio showcasing modding work for Escape from Tarkov and other games by MoxoPixel" />
     <meta property="og:image" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>assets/img/moxopixel_logo.png" />
     
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>" />
     <meta name="twitter:title" content="MOXOPIXEL // Game Art Portfolio" />
@@ -32,15 +30,13 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     
     <meta name="view-transition" content="same-origin" />
 
-    <!-- Performance optimizations -->
+    <!-- Performance bla bla -->
     <link rel="preload" href="assets/css/main.css" as="style">
     <link rel="preload" href="assets/img/light.png" as="image">
     <link rel="preload" href="assets/img/moxopixel_logo.png" as="image">
     
-    <!-- Critical CSS loading -->
     <link rel="stylesheet" href="assets/css/main.css">
     
-    <!-- Non-critical CSS with async loading -->
     <link rel="preload" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css"></noscript>
     
