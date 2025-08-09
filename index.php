@@ -36,7 +36,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <link rel="preload" href="assets/css/main.css" as="style">
     <link rel="preload" href="assets/img/light.png" as="image">
     <link rel="preload" href="assets/img/moxopixel_logo.png" as="image">
-    <link rel="preload" href="data/work_items.json" as="fetch" crossorigin>
     
     <!-- Critical CSS loading -->
     <link rel="stylesheet" href="assets/css/main.css">
