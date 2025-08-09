@@ -28,11 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const aboutTrigger = document.querySelector('.about-trigger');
     imageContainer = document.getElementById('imageContainer');
     mainContainer = document.getElementById('mainContentInner');
-    const loadingContainer = document.getElementById('loadingContainer');
     const imageLoader = new ImageLoader();
     const homeTrigger = document.querySelector('.home-trigger');
     const aboutContainer = document.getElementById('aboutContent');
-    const navItem = document.querySelector('.nav-item');
     const navLinks = document.querySelectorAll('.nav-link');
     const navCheckbox = document.getElementById('nav-checkbox');
 
@@ -558,9 +556,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isLoadingGallery = false;
         }
     }
-
-    loadingContainer.style.display = 'none';
-    mainContainer.style.display = 'block';
 
     navLinks.forEach(link => {
         // Helper function to handle navigation state updates

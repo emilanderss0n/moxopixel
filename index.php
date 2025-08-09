@@ -32,13 +32,24 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     
     <meta name="view-transition" content="same-origin" />
 
+    <!-- Performance optimizations -->
     <link rel="preload" href="assets/css/main.css" as="style">
     <link rel="preload" href="assets/img/light.png" as="image">
-
-    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/fancybox.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+    <link rel="preload" href="assets/img/moxopixel_logo.png" as="image">
+    <link rel="preload" href="data/work_items.json" as="fetch" crossorigin>
+    
+    <!-- Critical CSS loading -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    
+    <!-- Non-critical CSS with async loading -->
+    <link rel="preload" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css"></noscript>
+    
+    <link rel="preload" href="assets/css/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/bootstrap-icons.min.css"></noscript>
+    
+    <link rel="preload" href="assets/css/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/fancybox.css"></noscript>
     
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
     
@@ -114,11 +125,6 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
         </nav>
 
         <div class="container-fluid main-app">
-
-            <div id="loadingContainer" class="item-info-item">
-                <div class="body" id="loadingContent">
-                </div>
-            </div>
             
             <div id="mainContainer" class="item-info-item">
                 <div class="body" id="mainContent">
