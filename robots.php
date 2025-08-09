@@ -1,8 +1,14 @@
+<?php
+header('Content-Type: text/plain; charset=utf-8');
+
+$isLocal = strpos($_SERVER['HTTP_HOST'], 'localhost') !== false;
+$baseUrl = $isLocal ? 'http://localhost:8000/moxo' : 'https://' . $_SERVER['HTTP_HOST'];
+?>
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://moxopixel.com/sitemap.php
+Sitemap: <?php echo $baseUrl; ?>/sitemap.php
 
 # Block cache and temp directories
 Disallow: /cache/
