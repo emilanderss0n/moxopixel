@@ -12,6 +12,49 @@ function getRouter() {
     return window.router || ensureRouterIsInitialized();
 }
 
+/**
+ * Update meta tags for SEO
+ * @param {Object} meta - Meta information
+ * @param {string} meta.title - Page title
+ * @param {string} meta.description - Page description
+ * @param {string} meta.url - Page URL
+ * @param {string} meta.image - Page image
+ * @param {string} meta.type - Page type (article, website, etc.)
+ */
+function updateMetaTags({ title, description, url, image, type = 'article' }) {
+    // Update or create meta tags
+    const metaTags = [
+        { name: 'description', content: description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:url', content: url },
+        { property: 'og:image', content: image },
+        { property: 'og:type', content: type },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: image }
+    ];
+
+    metaTags.forEach(tag => {
+        const selector = tag.name ? `meta[name="${tag.name}"]` : `meta[property="${tag.property}"]`;
+        let existingTag = document.querySelector(selector);
+        
+        if (existingTag) {
+            existingTag.setAttribute('content', tag.content);
+        } else {
+            existingTag = document.createElement('meta');
+            if (tag.name) {
+                existingTag.setAttribute('name', tag.name);
+            } else {
+                existingTag.setAttribute('property', tag.property);
+            }
+            existingTag.setAttribute('content', tag.content);
+            document.head.appendChild(existingTag);
+        }
+    });
+}
+
 // Store references to current view elements for back navigation
 let currentAnimationTimeout = null;
 
@@ -65,6 +108,15 @@ export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
 
             const baseUrl = window.location.pathname.includes('/moxo') ? '/moxo/' : '/';
             history.pushState(null, '', baseUrl);
+
+            // Reset meta tags to default
+            updateMetaTags({
+                title: 'MOXOPIXEL // Game Art',
+                description: 'Portfolio showcasing modding work for Escape from Tarkov and other games by MoxoPixel',
+                url: window.location.origin + baseUrl,
+                image: `${window.location.origin}${baseUrl}/assets/img/moxopixel_logo.png`,
+                type: 'website'
+            });
 
             if (linksDiv) {
                 linksDiv.style.display = 'grid';
@@ -256,6 +308,15 @@ export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
                 const newUrl = `${baseUrl}/work/${slug}`;
                 history.pushState({ page: 'work-details', id, title: workTitle, dataClass }, '', newUrl);
                 document.title = `MOXOPIXEL // ${workTitle}`;
+
+                // Update meta tags for SEO
+                updateMetaTags({
+                    title: `MOXOPIXEL // ${workTitle}`,
+                    description: card.dataset.title ? `${card.dataset.title} - ${workCategoryOne} and ${workCategoryTwo} work by MoxoPixel` : `${workTitle} - Portfolio work by MoxoPixel`,
+                    url: window.location.origin + newUrl,
+                    image: workImage ? `${window.location.origin}${baseUrl}/assets/img/work_images/${workImage}` : `${window.location.origin}${baseUrl}/assets/img/work_thumbs/${card.dataset.slider_img || 'placeholder.png'}`,
+                    type: 'article'
+                });
 
                 // Ensure the click event is handled properly with direct onclick
                 backLink.onclick = handleBackClick;

@@ -41,7 +41,24 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 addedItemIds.add(item.id);
 
                 const linkElement = document.createElement('a');
-                linkElement.href = "javascript:void(0);";
+                
+                // Create SEO-friendly URL slug from title
+                const slug = item.title.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
+                
+                // Use proper URLs instead of javascript:void(0) for SEO
+                const workUrl = `${baseUrl}/work/${slug}`;
+                linkElement.href = workUrl;
+                
+                // Add proper attributes for accessibility and SEO
+                linkElement.setAttribute('aria-label', `View details for ${item.title}`);
+                linkElement.setAttribute('title', item.title);
+                
+                // Add microdata for SEO
+                linkElement.setAttribute('itemscope', '');
+                linkElement.setAttribute('itemtype', 'https://schema.org/CreativeWork');
+                
                 linkElement.dataset.class = `desc_${item.id}`;
                 linkElement.dataset.slider_img = `${item.slider_images[0].image}`;
                 linkElement.dataset.slider_images = JSON.stringify(item.slider_images);
@@ -55,6 +72,31 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 linkElement.dataset.software_used = `${JSON.stringify(item.work_meta.software_used)}`;
                 linkElement.classList.add('card-bfx');
                 linkElement.id = `work-card-${item.id}`;
+
+                // Add structured data for SEO
+                const structuredData = {
+                    "@context": "https://schema.org",
+                    "@type": "CreativeWork",
+                    "name": item.title,
+                    "description": item.short_desc,
+                    "url": workUrl,
+                    "image": `${baseUrl}/assets/img/work_thumbs/${item.thumb}`,
+                    "author": {
+                        "@type": "Person",
+                        "name": "MoxoPixel"
+                    },
+                    "genre": item.work_meta.category,
+                    "keywords": [
+                        item.work_meta.category,
+                        item.work_meta.category_two,
+                        item.work_meta.game,
+                        ...item.work_meta.coding_languages,
+                        ...item.work_meta.software_used
+                    ].filter(Boolean).join(', ')
+                };
+                
+                // Store structured data for potential use
+                linkElement.dataset.structuredData = JSON.stringify(structuredData);
 
                 const cardBody = document.createElement('div');
                 cardBody.classList.add('card-body');
@@ -71,6 +113,7 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 imgElement.loading = 'eager';
                 imgElement.alt = item.title;
                 imgElement.classList.add('work-thumb');
+                imgElement.setAttribute('itemprop', 'image'); // Microdata for image
 
                 // Store original thumb file path
                 const originalThumbPath = `${baseUrl}/assets/img/work_thumbs/${item.thumb}`;
@@ -132,6 +175,7 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 workTitle.classList.add('card-title', 'primary');
                 workTitle.textContent = item.title;
                 workTitle.id = `work-title-${item.id}`;
+                workTitle.setAttribute('itemprop', 'name'); // Microdata for work title
 
                 const workTitle2 = document.createElement('h2');
                 workTitle2.classList.add('card-title', 'secondary');
@@ -146,6 +190,7 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 const descriptionElement = document.createElement('p');
                 descriptionElement.classList.add('card-text');
                 descriptionElement.textContent = item.short_desc;
+                descriptionElement.setAttribute('itemprop', 'description'); // Microdata for description
 
                 // Append titles to titles wrapper
                 titlesWrapper.appendChild(workTitle);

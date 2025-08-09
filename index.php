@@ -12,10 +12,24 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <base href="<?php echo $base; ?>">
     <title>MOXOPIXEL // Game Art</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Modding work of MoxoPixel. MoxoPixel has been creating digital art for 20+ years." />
-    <meta property="og:image" content="assets/img/favicon.ico" />
-    <meta property="og:description" content="Modding work of MoxoPixel. MoxoPixel has been creating digital art for 20+ years." />
-    <meta property="og:title" content="MOXOPIXEL // Game Art" />
+    <meta name="description" content="Portfolio showcasing modding work for Escape from Tarkov and other games by MoxoPixel. Expert in 3D texturing, scripting, and game asset creation with 20+ years of digital art experience." />
+    <meta name="keywords" content="MoxoPixel, game modding, Escape from Tarkov, 3D texturing, game art, portfolio, TypeScript, Blender, Photoshop" />
+    <meta name="author" content="MoxoPixel" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>" />
+    <meta property="og:title" content="MOXOPIXEL // Game Art Portfolio" />
+    <meta property="og:description" content="Portfolio showcasing modding work for Escape from Tarkov and other games by MoxoPixel" />
+    <meta property="og:image" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>assets/img/moxopixel_logo.png" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>" />
+    <meta name="twitter:title" content="MOXOPIXEL // Game Art Portfolio" />
+    <meta name="twitter:description" content="Portfolio showcasing modding work for Escape from Tarkov and other games by MoxoPixel" />
+    <meta name="twitter:image" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>assets/img/moxopixel_logo.png" />
+    
     <meta name="view-transition" content="same-origin" />
 
     <link rel="preload" href="assets/css/main.css" as="style">
@@ -27,6 +41,27 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
     
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "MoxoPixel",
+        "url": "<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $base; ?>",
+        "jobTitle": "Game Developer & 3D Artist",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Freelance"
+        },
+        "description": "Expert in game modding, 3D texturing, and scripting with 20+ years of digital art experience",
+        "knowsAbout": ["Game Development", "3D Texturing", "TypeScript", "Blender", "Photoshop", "Unity", "Escape from Tarkov Modding"],
+        "sameAs": [
+            "https://github.com/emilanderss0n",
+            "https://hub.sp-tarkov.com/user/38913-emilandersson/"
+        ]
+    }
+    </script>
 
     <style>
         .fonts-loading {
