@@ -478,14 +478,6 @@
         overflow-x: hidden;
     }
 
-    .medium-zoom--opened .medium-zoom-overlay {
-        z-index: 9999 !important;
-    }
-
-    .medium-zoom-image--opened {
-        z-index: 10000 !important;
-    }
-
     .content-wrap {
         --header-height: 80px;
 
@@ -829,6 +821,13 @@
             width: 100%;
             padding: 1.8rem var(--padding);
             transition: all 0.4s ease;
+            /* Ensure touch events work properly on mobile */
+            touch-action: manipulation;
+
+            /* Ensure all child elements don't interfere with touch events */
+            & span {
+                pointer-events: none;
+            }
 
             &::after {
                 content: '';

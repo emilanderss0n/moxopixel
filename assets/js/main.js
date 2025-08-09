@@ -324,10 +324,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // Helper function to handle navigation clicks for both desktop and mobile
+    function handleNavClick(handler) {
+        return (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handler(e);
+        };
+    }
+
     // Update event listeners without view transitions
-    imageGalleryTrigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        
+    imageGalleryTrigger.addEventListener('click', handleNavClick((e) => {
         // Prevent multiple rapid clicks
         if (isLoadingGallery) {
             return;
@@ -338,18 +345,42 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update URL immediately
         history.pushState({ page: 'gallery' }, 'MOXOPIXEL // Gallery', galleryUrl);
         router.navigateTo('gallery', {}, false); // Don't push state again
-    });
+    }));
 
-    homeTrigger.addEventListener('click', (e) => {
-        e.preventDefault();
+    // Add touch event listeners for mobile devices
+    imageGalleryTrigger.addEventListener('touchend', handleNavClick((e) => {
+        if (isLoadingGallery) {
+            return;
+        }
+
+        const galleryUrl = baseUrl + '/gallery';
+        history.pushState({ page: 'gallery' }, 'MOXOPIXEL // Gallery', galleryUrl);
+        router.navigateTo('gallery', {}, false);
+    }));
+
+    homeTrigger.addEventListener('click', handleNavClick((e) => {
         router.navigateTo('work');
-    });
+    }));
+
+    homeTrigger.addEventListener('touchend', handleNavClick((e) => {
+        router.navigateTo('work');
+    }));
     
-    aboutTrigger.addEventListener('click', (e) => {
-        e.preventDefault();
+    aboutTrigger.addEventListener('click', handleNavClick((e) => {
         const aboutUrl = baseUrl + '/about';
 
         // Ensure data is being loaded, but don't wait for it
+        scheduleIdleTask(() => {
+            preloadGitHubData().catch(() => {/* Ignore errors */ });
+        });
+
+        history.pushState({ page: 'about' }, 'MOXOPIXEL // About', aboutUrl);
+        router.navigateTo('about', {}, false);
+    }));
+
+    aboutTrigger.addEventListener('touchend', handleNavClick((e) => {
+        const aboutUrl = baseUrl + '/about';
+
         scheduleIdleTask(() => {
             preloadGitHubData().catch(() => {/* Ignore errors */ });
         });
@@ -371,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('GSAP not available for about title animation');
             }
         }, 300); // Slightly longer delay to ensure everything is loaded
-    });
+    }));
 
     // Use the already declared navLinks variable
     navLinks.forEach(link => {
@@ -532,7 +563,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mainContainer.style.display = 'block';
 
     navLinks.forEach(link => {
-        link.addEventListener('click', () => {
+        // Helper function to handle navigation state updates
+        const handleNavStateUpdate = () => {
             if (navCheckbox && navCheckbox.checked) {
                 navCheckbox.checked = false;
             }
@@ -545,7 +577,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (parentNavItem) {
                 parentNavItem.classList.add('active');
             }
-        });
+        };
+
+        // Add both click and touchend event listeners for better mobile support
+        link.addEventListener('click', handleNavStateUpdate);
+        link.addEventListener('touchend', handleNavStateUpdate);
     });
 
 });
