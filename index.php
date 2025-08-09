@@ -11,7 +11,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <meta charset="UTF-8" />
     <base href="<?php echo $base; ?>">
     <title>MOXOPIXEL // Game Art</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Modding work of MoxoPixel. MoxoPixel has been creating digital art for 20+ years." />
     <meta property="og:image" content="assets/img/favicon.ico" />
     <meta property="og:description" content="Modding work of MoxoPixel. MoxoPixel has been creating digital art for 20+ years." />
@@ -50,19 +50,19 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
             <div id="navbarSupportedContent">
                 <div class="right link-container">
                     <div class="social-links">
-                        <a class="icon github" href="https://github.com/emilanderss0n" target="_blank">
+                        <a class="icon github" href="https://github.com/emilanderss0n" target="_blank" aria-label="GitHub">
                             <span class="tooltip">GitHub</span>
                             <i class="bi bi-github"></i>
                         </a>
-                        <a class="icon youtube" href="https://www.youtube.com/@moxopixel" target="_blank">
+                        <a class="icon youtube" href="https://www.youtube.com/@moxopixel" target="_blank" aria-label="YouTube">
                             <span class="tooltip">YouTube</span>
                             <i class="bi bi-youtube"></i>
                         </a>
-                        <a class="icon ex" href="https://x.com/bobemil_sw13" target="_blank">
+                        <a class="icon ex" href="https://x.com/bobemil_sw13" target="_blank" aria-label="X (Twitter)">
                             <span class="tooltip">X</span>
                             <i class="bi bi-twitter-x"></i>
                         </a>
-                        <a class="icon artstation" href="https://www.artstation.com/emils-graphics" target="_blank">
+                        <a class="icon artstation" href="https://www.artstation.com/emils-graphics" target="_blank" aria-label="ArtStation">
                             <span class="tooltip">ArtStation</span>
                             <svg width="20px" height="20px" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title>ArtStation icon</title><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.142-1.289H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"></path></g></svg>
                         </a>
