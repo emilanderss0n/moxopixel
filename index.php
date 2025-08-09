@@ -21,10 +21,10 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <link rel="preload" href="assets/css/main.css" as="style">
     <link rel="preload" href="assets/img/light.png" as="image">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/medium-zoom.css">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/fancybox.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
     
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
 
@@ -149,7 +149,7 @@ $base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? '/moxo/' : '/';
     <script src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"></script> 
 
     <script src="serve-module.php?file=External/gsap.min.js"></script>
-    <script defer src="serve-module.php?file=External/medium-zoom.js"></script>
+    <script defer src="serve-module.php?file=External/fancybox.umd.js"></script>
     <script defer src="serve-module.php?file=/External/split-type.min.js"></script>
     <script type="module" src="serve-module.php?file=main.js"></script>
 

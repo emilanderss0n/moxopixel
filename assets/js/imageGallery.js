@@ -3,75 +3,17 @@ import { createFocusTrap } from './Utils/utils.js';
 
 let currentPage = 1;
 let totalPages = 1;
-let galleryFocusTrap = null;
 
 export function initializeImageGallery() {
-    // First, detach any existing zoom instances to prevent duplicates
-    const existingZoomImages = document.querySelectorAll('.medium-zoom-image');
-    existingZoomImages.forEach(img => {
-        img.classList.remove('medium-zoom-image');
-        img.style.transform = '';
-    });
-    
-    const zoom = window.mediumZoom('.thumbnail:not(.medium-zoom-image)', {
-        background: 'rgba(0, 0, 0, 0.9)',
-        margin: 40,
-        scrollOffset: 0,
+
+    Fancybox.bind("[data-fancybox]", {
+    // Your custom options
     });
 
-    // Focus trap setup
-    const imageContainer = document.getElementById('imageContainer');
-    if (imageContainer) {
-        galleryFocusTrap = createFocusTrap(imageContainer);
-        galleryFocusTrap.activate();
-    }
+}
 
-    // Handle zoom-specific events
-    const handleZoomKeyPress = (e) => {
-        if (e.key === 'Escape') {
-            zoom.close();
-        }
-    };
-    
-    // Global keyboard navigation that works regardless of zoom state
-    const handleGlobalKeyPress = (e) => {
-        // Only process keyboard navigation when gallery is visible
-        const imageContainer = document.getElementById('imageContainer');
-        const galleryVisible = imageContainer && window.getComputedStyle(imageContainer).display !== 'none';
-        
-        if (galleryVisible) {
-            if (e.key === 'ArrowLeft') {
-                navigateToPage(currentPage - 1);
-            } else if (e.key === 'ArrowRight') {
-                navigateToPage(currentPage + 1);
-            }
-        }
-    };
-    
-    // Add the global keyboard navigation
-    document.addEventListener('keyup', handleGlobalKeyPress);
-
-    zoom.on('open', () => {
-        document.body.style.overflow = 'hidden';
-        document.addEventListener('keyup', handleZoomKeyPress);
-    });
-
-    zoom.on('closed', () => {
-        document.body.style.overflow = '';
-        document.removeEventListener('keyup', handleZoomKeyPress);
-    });
-
-    // Clean up function
-    return function cleanup() {
-        document.removeEventListener('keyup', handleZoomKeyPress);
-        document.removeEventListener('keyup', handleGlobalKeyPress);
-        zoom.detach();
-        removePaginationControls();
-        if (galleryFocusTrap) {
-            galleryFocusTrap.deactivate();
-            galleryFocusTrap = null;
-        }
-    };
+export function getCurrentPage() {
+    return currentPage;
 }
 
 export function updatePaginationState(page, total) {

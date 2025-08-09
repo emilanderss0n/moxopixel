@@ -1,6 +1,6 @@
 import { fetchData } from './cache.js';
 import { fetchAndDisplayWorkItems } from './initWorks.js';
-import { initializeImageGallery, updatePaginationState } from './imageGallery.js';
+import { initializeImageGallery, updatePaginationState, getCurrentPage } from './imageGallery.js';
 import { ImageLoader } from './Utils/imageLoader.js';
 import { Router } from './router.js';
 import { handleWorkClick } from './workModule.js'; // Updated to use unified module
@@ -220,8 +220,10 @@ document.addEventListener('DOMContentLoaded', () => {
             imageContainerBody.querySelectorAll('.image-container').length > 0;
             
         if (!hasExistingImages || !isLoadingGallery) {
-            // Load the first page of the gallery if not already loaded
-            loadGalleryPage(1);
+            // Load the current page of the gallery if not already loaded
+            // Use getCurrentPage() to preserve pagination state
+            const pageToLoad = hasExistingImages ? getCurrentPage() : 1;
+            loadGalleryPage(pageToLoad);
         }
         
         updateNavigation('gallery');
@@ -447,9 +449,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             for (const image of images) {
-                const container = document.createElement('div');
+                const container = document.createElement('a');
                 container.className = 'image-container';
-                container.dataset.imageId = image;
+                container.href = `assets/img/dump/${image}`;
+                container.dataset.fancybox = 'gallery';
                 container.tabIndex = 0;
 
                 const img = document.createElement('img');
@@ -465,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Accessibility: open zoom on Enter/Space
                 container.addEventListener('keydown', (e) => {
                     if ((e.key === 'Enter' || e.key === ' ') && img.complete) {
-                        img.click(); // medium-zoom triggers on click
+                        img.click(); // fancybox triggers on click
                         e.preventDefault();
                     }
                 });
