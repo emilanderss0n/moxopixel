@@ -54,6 +54,50 @@ function createBackButton(clickHandler) {
 }
 
 /**
+ * Handle work sharing using navigator.share() API
+ * @param {string} workTitle - The title of the work item
+ * @param {string} workImage - The work image filename
+ */
+async function handleWorkShare(workTitle, workImage) {
+    // Check if Web Share API is supported
+    if (!navigator.share) {
+        // Fallback: copy URL to clipboard
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            // You could add a toast notification here
+        } catch (error) {
+            console.warn('Failed to copy URL to clipboard:', error);
+            // Final fallback: show alert with URL
+            const url = window.location.href;
+            prompt('Copy this URL to share:', url);
+        }
+        return;
+    }
+
+    const isLocalhost = window.location.hostname.includes('localhost');
+    const hasSubPath = isLocalhost && window.location.pathname.includes('/moxo/');
+    const baseUrl = hasSubPath ? '/moxo' : '';
+    const shareData = {
+        title: `MOXOPIXEL // ${workTitle}`,
+        text: `Check out this project by MoxoPixel: ${workTitle}`,
+        url: window.location.href
+    };
+
+    try {
+        await navigator.share(shareData);
+    } catch (error) {
+        console.warn('Error sharing content:', error);
+        // Fallback to copying URL to clipboard
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            console.log('URL copied to clipboard as fallback');
+        } catch (clipboardError) {
+            console.warn('Failed to copy URL to clipboard:', clipboardError);
+        }
+    }
+}
+
+/**
  * Handle the back button click
  * @param {Event} event - The click event
  * @param {HTMLElement} linksDiv - The links container element
@@ -151,10 +195,16 @@ function createWorkDetailsHTML(params) {
             <div class="work-more">
                 ${githubUrl ? `<a class="btn btn-outline-secondary me-2" href="${githubUrl}" target="_blank">
                     <i class="bi bi-github"></i>
+                    <span class="btn-text">Repo</span>
                 </a>` : ''}
-                ${websiteUrl && websiteUrl !== 'undefined' ? `<a class="btn btn-outline-info" href="${websiteUrl}" target="_blank">
+                ${websiteUrl && websiteUrl !== 'undefined' ? `<a class="btn btn-outline-info me-2" href="${websiteUrl}" target="_blank">
                     <i class="bi bi-box-arrow-up-right"></i>
+                    <span class="btn-text">Website</span>
                 </a>` : ''}
+                <button class="btn btn-outline-primary share-work-btn" type="button">
+                    <i class="bi bi-share"></i>
+                    <span class="btn-text">Share</span>
+                </button>
             </div>
         </div>
         <div class="work-content">
@@ -283,6 +333,14 @@ async function loadWorkDetails(params) {
             animateText(workTitleElement);
         }
 
+        // Set up share button functionality
+        const shareButton = tempContainer.querySelector('.share-work-btn');
+        if (shareButton) {
+            shareButton.addEventListener('click', () => {
+                handleWorkShare(workTitle, workImage);
+            });
+        }
+
         // Load the featured image or YouTube embed
         const featuredImageContainer = tempContainer.querySelector('.featured-image-container');
         
@@ -390,8 +448,9 @@ function getYouTubeEmbedUrl(youtubeUrl) {
  * @param {HTMLElement} linksDiv - The links container element
  * @param {HTMLElement} titleElement - The title element
  * @param {HTMLElement} workDetails - The work details element
+ * @param {boolean} skipAnimation - Whether to skip the transition animation (for direct page loads)
  */
-export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
+export function handleWorkClick(card, linksDiv, titleElement, workDetails, skipAnimation = false) {
     // Clear any existing animation timeouts
     if (state.animationTimeout) {
         clearTimeout(state.animationTimeout);
@@ -414,9 +473,8 @@ export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
 
     if (!dataClass) return;
 
-    // Start the transition animation
-    workTransitionAnimator.animateToDetail(card, workDetails).then(() => {
-        // Load work details with all parameters
+    if (skipAnimation) {
+        // For direct page loads, skip animation and load content immediately
         loadWorkDetails({
             card,
             id,
@@ -435,7 +493,30 @@ export function handleWorkClick(card, linksDiv, titleElement, workDetails) {
             codingLanguages,
             softwareUsed
         });
-    });
+    } else {
+        // Start the transition animation for interactive clicks
+        workTransitionAnimator.animateToDetail(card, workDetails).then(() => {
+            // Load work details with all parameters
+            loadWorkDetails({
+                card,
+                id,
+                dataClass,
+                linksDiv,
+                titleElement,
+                workDetails,
+                workTitle,
+                workImage,
+                sliderImagesData,
+                githubUrl,
+                websiteUrl,
+                useGithubReadme,
+                workCategoryOne,
+                workCategoryTwo,
+                codingLanguages,
+                softwareUsed
+            });
+        });
+    }
 }
 
 /**

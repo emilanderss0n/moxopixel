@@ -18,9 +18,10 @@ export class Router {
         // Make animation state globally available
         window.cardAnimationState = this.animationState;
 
-        // Handle initial load and back/forward
+        // Handle back/forward navigation
         window.addEventListener('popstate', (e) => this.handlePopState(e));
-        this.handleInitialLoad();
+        
+        // Don't call handleInitialLoad here - let main.js call it after routes are registered
     }
 
     async handleInitialLoad() {

@@ -270,8 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (card) {
-            // If we found or created a card, trigger the work click handler
-            handleWorkClick(card, linksDiv, titleElement, workDetails);
+            // For direct page loads, we need to bypass the transition animation
+            // and directly show the work details
+            hideAllContainers();
+            mainContainer.style.display = 'flex'; // Show the main container
+            workDetails.style.display = 'block';  // Show the work details within it
+            
+            // Call handleWorkClick with skipAnimation = true for direct page loads
+            handleWorkClick(card, linksDiv, titleElement, workDetails, true);
+            
+            // Update navigation to show home as active since work details are part of the work section
+            updateNavigation('home');
         } else {
             // If no card was found, navigate back to work
             router.navigateTo('work');
@@ -578,6 +587,9 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', handleNavStateUpdate);
         link.addEventListener('touchend', handleNavStateUpdate);
     });
+
+    // Now that all routes are registered, handle the initial route
+    router.handleInitialLoad();
 
 });
 
