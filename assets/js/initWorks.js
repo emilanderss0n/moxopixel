@@ -8,6 +8,8 @@ import { whenGsapReady } from './Utils/utils.js';
 let hasLoadedWorkItems = false;
 // Track which items have been added to prevent duplicates
 const addedItemIds = new Set();
+// Track if initial animation has been triggered
+let hasTriggeredInitialAnimation = false;
 
 export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, workDetails) {
     // Early return if work items are already loaded
@@ -226,11 +228,12 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
             initWorkHandlers(cards, linksDiv, titleElement, workDetails);
 
             // Add entrance animation after all items are loaded, but wait for GSAP to be ready
-            // Check if we should animate based on the router's animation state
-            const shouldAnimate = !window.cardAnimationState || 
-                                 (!window.cardAnimationState.hasInitiallyAnimated);
+            // More robust check: animate if we haven't triggered the initial animation yet
+            const shouldAnimate = !hasTriggeredInitialAnimation;
             
             if (shouldAnimate) {
+                hasTriggeredInitialAnimation = true;
+                
                 // Mark that we're animating
                 if (window.router) {
                     window.router.setAnimating(true);
@@ -253,16 +256,32 @@ export async function fetchAndDisplayWorkItems(baseUrl, linksDiv, titleElement, 
                 }).then(success => {
                     if (!success) {
                         console.warn('Failed to animate listing entrance - GSAP not loaded in time');
+                        // Fallback: make cards visible without animation
+                        const cards = document.querySelectorAll('.card-bfx');
+                        cards.forEach(card => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'none';
+                            card.style.visibility = 'visible';
+                        });
                     }
                     // Mark as not animating regardless of success/failure
                     if (window.router) {
                         window.router.setAnimating(false);
+                        window.router.setInitiallyAnimated(true);
                     }
                 }).catch(error => {
                     console.error('Error in animation timing:', error);
-                    // Mark as not animating even if failed
+                    // Fallback: make cards visible without animation
+                    const cards = document.querySelectorAll('.card-bfx');
+                    cards.forEach(card => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'none';
+                        card.style.visibility = 'visible';
+                    });
+                    // Mark as not animating
                     if (window.router) {
                         window.router.setAnimating(false);
+                        window.router.setInitiallyAnimated(true);
                     }
                 });
             } else {
